@@ -47,7 +47,11 @@ namespace Cyotek.Ini
         if (_isLoadDeferred)
         {
           _isLoadDeferred = false;
-          this.Load(this.FileName);
+
+          if (File.Exists(this.FileName))
+          {
+            this.Load(this.FileName);
+          }
         }
 
         return base.ChildTokens;
@@ -175,6 +179,11 @@ namespace Cyotek.Ini
       return this.GetValue(sectionName, valueName, string.Empty);
     }
 
+    public static string GetValue(string fileName, string sectionName, string valueName, string defaultValue)
+    {
+      return new IniDocument(fileName).GetValue(sectionName, valueName, defaultValue);
+    }
+
     public string GetValue(string sectionName, string valueName, string defaultValue)
     {
       IniToken sectionToken;
@@ -189,6 +198,11 @@ namespace Cyotek.Ini
       result = sectionToken != null ? ((IniSectionToken)sectionToken).GetValue(valueName, defaultValue) : defaultValue;
 
       return result;
+    }
+
+    public void Load()
+    {
+      this.Load(this.FileName);
     }
 
     public void Load(string fileName)
@@ -308,6 +322,16 @@ namespace Cyotek.Ini
       {
         this.Save(stream);
       }
+    }
+
+    public static void SetValue(string fileName, string sectionName, string valueName, string value)
+    {
+      IniDocument document;
+
+      document = new IniDocument(fileName);
+
+      document.SetValue(sectionName, valueName, value);
+      document.Save();
     }
 
     public void SetValue(string sectionName, string valueName, string value)
