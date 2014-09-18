@@ -38,6 +38,25 @@ namespace Cyotek.Ini
 
     #endregion
 
+    #region Public Class Members
+
+    public static string GetValue(string fileName, string sectionName, string valueName, string defaultValue)
+    {
+      return new IniDocument(fileName).GetValue(sectionName, valueName, defaultValue);
+    }
+
+    public static void SetValue(string fileName, string sectionName, string valueName, string value)
+    {
+      IniDocument document;
+
+      document = new IniDocument(fileName);
+
+      document.SetValue(sectionName, valueName, value);
+      document.Save();
+    }
+
+    #endregion
+
     #region Overridden Properties
 
     public override IniTokenCollection ChildTokens
@@ -179,11 +198,6 @@ namespace Cyotek.Ini
       return this.GetValue(sectionName, valueName, string.Empty);
     }
 
-    public static string GetValue(string fileName, string sectionName, string valueName, string defaultValue)
-    {
-      return new IniDocument(fileName).GetValue(sectionName, valueName, defaultValue);
-    }
-
     public string GetValue(string sectionName, string valueName, string defaultValue)
     {
       IniToken sectionToken;
@@ -322,16 +336,6 @@ namespace Cyotek.Ini
       {
         this.Save(stream);
       }
-    }
-
-    public static void SetValue(string fileName, string sectionName, string valueName, string value)
-    {
-      IniDocument document;
-
-      document = new IniDocument(fileName);
-
-      document.SetValue(sectionName, valueName, value);
-      document.Save();
     }
 
     public void SetValue(string sectionName, string valueName, string value)
