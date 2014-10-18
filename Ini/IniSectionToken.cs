@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -70,6 +71,11 @@ namespace Cyotek.Ini
       result = valueToken == null ? defaultValue : valueToken.Value;
 
       return result;
+    }
+
+    public IEnumerable<string> GetNames()
+    {
+      return from token in this.ChildTokens where token.Type == IniTokenType.Value select token.Name;
     }
 
     public IniValueToken GetValueToken(string name)
