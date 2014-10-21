@@ -1,9 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 
 namespace Cyotek.Ini
 {
-  public abstract class IniToken
+  public abstract class IniToken : ICloneable
   {
     #region Overridden Methods
 
@@ -50,6 +51,8 @@ namespace Cyotek.Ini
 
     #region Public Members
 
+    public abstract IniToken Clone();
+
     public virtual void Write(TextWriter writer)
     {
       if (this.ChildTokens != null)
@@ -59,6 +62,15 @@ namespace Cyotek.Ini
           token.Write(writer);
         }
       }
+    }
+
+    #endregion
+
+    #region ICloneable Members
+
+    object ICloneable.Clone()
+    {
+      return this.Clone();
     }
 
     #endregion

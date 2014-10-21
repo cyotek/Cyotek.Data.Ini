@@ -29,6 +29,11 @@ namespace Cyotek.Ini
 
     #region Overridden Methods
 
+    public override IniToken Clone()
+    {
+      return new IniValueToken(this.Name, this.Value);
+    }
+
     public override void Write(TextWriter writer)
     {
       writer.WriteLine(string.Concat(this.Name, "=", this.Value.ToEscapedLiteral()));

@@ -38,6 +38,11 @@ namespace Cyotek.Ini
 
     #region Overridden Methods
 
+    public override IniToken Clone()
+    {
+      return new IniCommentToken(this.Value);
+    }
+
     public override void Write(TextWriter writer)
     {
       if (!this.Value.StartsWithAny(IniDocument.DefaultCommentCharacters))

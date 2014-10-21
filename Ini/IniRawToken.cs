@@ -31,12 +31,17 @@ namespace Cyotek.Ini
 
     public override IniTokenType Type
     {
-      get { return IniTokenType.Whitespace; }
+      get { return IniTokenType.Raw; }
     }
 
     #endregion
 
     #region Overridden Methods
+
+    public override IniToken Clone()
+    {
+      return new IniRawToken(this.Value);
+    }
 
     public override void Write(TextWriter writer)
     {

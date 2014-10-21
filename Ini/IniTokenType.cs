@@ -12,6 +12,8 @@
 
     Value,
 
-    Section
+    Section,
+
+    Raw
   }
 }

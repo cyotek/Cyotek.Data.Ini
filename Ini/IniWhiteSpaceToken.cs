@@ -59,6 +59,11 @@ namespace Cyotek.Ini
 
     #region Overridden Methods
 
+    public override IniToken Clone()
+    {
+      return new IniWhitespaceToken(this.Value);
+    }
+
     /// <summary>
     /// Returns a string that represents the current object.
     /// </summary>

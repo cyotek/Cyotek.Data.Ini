@@ -85,6 +85,23 @@ namespace Cyotek.Ini
 
     #endregion
 
+    #region Overridden Methods
+
+    public override IniToken Clone()
+    {
+      IniDocument result;
+
+      result = new IniDocument();
+      foreach (IniToken token in this.ChildTokens)
+      {
+        result.ChildTokens.Add(token.Clone());
+      }
+
+      return result;
+    }
+
+    #endregion
+
     #region Public Properties
 
     public string FileName { get; set; }

@@ -41,6 +41,19 @@ namespace Cyotek.Ini
 
     #region Overridden Methods
 
+    public override IniToken Clone()
+    {
+      IniSectionToken result;
+
+      result = new IniSectionToken();
+      foreach (IniToken token in this.ChildTokens)
+      {
+        result.ChildTokens.Add(token.Clone());
+      }
+
+      return result;
+    }
+
     public override void Write(TextWriter writer)
     {
       writer.WriteLine(string.Concat("[", this.Name, "]"));
@@ -57,6 +70,11 @@ namespace Cyotek.Ini
 
     #region Public Members
 
+    public IEnumerable<string> GetNames()
+    {
+      return from token in this.ChildTokens where token.Type == IniTokenType.Value select token.Name;
+    }
+
     public string GetValue(string valueName)
     {
       return this.GetValue(valueName, string.Empty);
@@ -71,11 +89,6 @@ namespace Cyotek.Ini
       result = valueToken == null ? defaultValue : valueToken.Value;
 
       return result;
-    }
-
-    public IEnumerable<string> GetNames()
-    {
-      return from token in this.ChildTokens where token.Type == IniTokenType.Value select token.Name;
     }
 
     public IniValueToken GetValueToken(string name)
