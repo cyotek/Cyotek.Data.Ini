@@ -16,7 +16,7 @@ namespace Cyotek.Ini
 
     public IniTokenCollection()
     {
-      _nameToIndexLookup = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase);
+      _nameToIndexLookup = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
     }
 
     #endregion
@@ -81,7 +81,7 @@ namespace Cyotek.Ini
     {
       int index;
 
-      if (!_nameToIndexLookup.TryGetValue(name, out index) || index < 0 || index > this.Count - 1 || !this[index].Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+      if (!_nameToIndexLookup.TryGetValue(name, out index) || index < 0 || index > this.Count - 1 || !this[index].Name.Equals(name, StringComparison.OrdinalIgnoreCase))
       {
         // missing index, or not found, out of bounds, etc
         index = -1;
@@ -93,7 +93,7 @@ namespace Cyotek.Ini
 
           itemName = this[i].Name;
 
-          if (itemName != null && itemName.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+          if (itemName != null && itemName.Equals(name, StringComparison.OrdinalIgnoreCase))
           {
             _nameToIndexLookup.Add(name, i);
             index = i;
