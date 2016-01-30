@@ -112,7 +112,7 @@ namespace Cyotek.Ini
 
       if (string.IsNullOrEmpty(name))
       {
-        throw new ArgumentNullException("name");
+        throw new ArgumentNullException(nameof(name));
       }
 
       if (!this.ChildTokens.TryGetValue(name, out valueToken))

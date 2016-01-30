@@ -122,7 +122,7 @@ namespace Cyotek.Ini
 
       if (string.IsNullOrEmpty(sectionName))
       {
-        throw new ArgumentNullException("sectionName");
+        throw new ArgumentNullException(nameof(sectionName));
       }
       if (!this.ChildTokens.TryGetValue(sectionName, out sectionToken))
       {
@@ -144,7 +144,7 @@ namespace Cyotek.Ini
 
       if (string.IsNullOrEmpty(sectionName))
       {
-        throw new ArgumentNullException("sectionName");
+        throw new ArgumentNullException(nameof(sectionName));
       }
 
       result = false;
@@ -166,12 +166,12 @@ namespace Cyotek.Ini
 
       if (string.IsNullOrEmpty(sectionName))
       {
-        throw new ArgumentNullException("sectionName");
+        throw new ArgumentNullException(nameof(sectionName));
       }
 
       if (string.IsNullOrEmpty(valueName))
       {
-        throw new ArgumentNullException("valueName");
+        throw new ArgumentNullException(nameof(valueName));
       }
 
       result = false;
@@ -197,7 +197,7 @@ namespace Cyotek.Ini
 
       if (string.IsNullOrEmpty(sectionName))
       {
-        throw new ArgumentNullException("sectionName");
+        throw new ArgumentNullException(nameof(sectionName));
       }
 
       this.ChildTokens.TryGetValue(sectionName, out sectionToken);
@@ -222,7 +222,7 @@ namespace Cyotek.Ini
 
       if (string.IsNullOrEmpty(valueName))
       {
-        throw new ArgumentNullException("valueName");
+        throw new ArgumentNullException(nameof(valueName));
       }
 
       sectionToken = this.GetSection(sectionName);
@@ -321,7 +321,7 @@ namespace Cyotek.Ini
     {
       if (writer == null)
       {
-        throw new ArgumentNullException("writer");
+        throw new ArgumentNullException(nameof(writer));
       }
 
       writer.Write(this.ToString());
@@ -334,7 +334,7 @@ namespace Cyotek.Ini
 
       if (stream == null)
       {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
 
       writer = new StreamWriter(stream);
@@ -346,7 +346,7 @@ namespace Cyotek.Ini
     {
       if (string.IsNullOrEmpty(fileName))
       {
-        throw new ArgumentNullException("fileName");
+        throw new ArgumentNullException(nameof(fileName));
       }
 
       using (Stream stream = File.Create(fileName))
@@ -392,7 +392,7 @@ namespace Cyotek.Ini
           token = new IniRawToken(value);
           break;
         default:
-          throw new ArgumentOutOfRangeException("tokenType");
+          throw new ArgumentOutOfRangeException(nameof(tokenType));
       }
 
       return token;

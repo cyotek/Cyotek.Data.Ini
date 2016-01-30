@@ -48,7 +48,7 @@ namespace Cyotek.Ini
       {
         if (!string.IsNullOrEmpty(value) && !value.All(char.IsWhiteSpace))
         {
-          throw new ArgumentException("Value can only contain whitespace characters.", "value");
+          throw new ArgumentException("Value can only contain whitespace characters.", nameof(value));
         }
 
         _value = value;
