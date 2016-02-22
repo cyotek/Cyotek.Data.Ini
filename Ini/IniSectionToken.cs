@@ -99,7 +99,7 @@ namespace Cyotek.Ini
 
       if (valueToken != null && valueToken.Type != IniTokenType.Value)
       {
-        throw new InvalidDataException(string.Format("A token named '{0}' already exists, but is not a value token.", name));
+        throw new InvalidDataException($"A token named '{name}' already exists, but is not a value token.");
       }
 
       return (IniValueToken)valueToken;
@@ -122,7 +122,7 @@ namespace Cyotek.Ini
       }
       else if (valueToken.Type != IniTokenType.Value)
       {
-        throw new InvalidDataException(string.Format("A token named '{0}' already exists, but is not a value token.", name));
+        throw new InvalidDataException($"A token named '{name}' already exists, but is not a value token.");
       }
       else if (!string.Equals(valueToken.Value, value))
       {
