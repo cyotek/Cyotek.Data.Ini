@@ -6,7 +6,26 @@ namespace Cyotek.Ini
 {
   public abstract class IniToken : ICloneable
   {
-    #region Overridden Methods
+    #region Properties
+
+    public virtual IniTokenCollection ChildTokens { get; protected set; }
+
+    public string InnerText
+    {
+      get { return this.ToString(); }
+    }
+
+    public virtual string Name { get; set; }
+
+    public abstract IniTokenType Type { get; }
+
+    public virtual string Value { get; set; }
+
+    #endregion
+
+    #region Methods
+
+    public abstract IniToken Clone();
 
     /// <summary>
     /// Returns a string that represents the current object.
@@ -30,29 +49,6 @@ namespace Cyotek.Ini
       return result.ToStringAndRelease();
     }
 
-    #endregion
-
-    #region Public Properties
-
-    public virtual IniTokenCollection ChildTokens { get; protected set; }
-
-    public string InnerText
-    {
-      get { return this.ToString(); }
-    }
-
-    public virtual string Name { get; set; }
-
-    public abstract IniTokenType Type { get; }
-
-    public virtual string Value { get; set; }
-
-    #endregion
-
-    #region Public Members
-
-    public abstract IniToken Clone();
-
     public virtual void Write(TextWriter writer)
     {
       if (this.ChildTokens != null)
@@ -66,7 +62,7 @@ namespace Cyotek.Ini
 
     #endregion
 
-    #region ICloneable Members
+    #region ICloneable Interface
 
     object ICloneable.Clone()
     {

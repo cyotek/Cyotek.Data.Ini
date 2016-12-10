@@ -7,13 +7,13 @@ namespace Cyotek.Ini
 {
   public class IniWhitespaceToken : IniToken
   {
-    #region Instance Fields
+    #region Fields
 
     private string _value;
 
     #endregion
 
-    #region Public Constructors
+    #region Constructors
 
     public IniWhitespaceToken()
       : this(string.Empty)
@@ -26,7 +26,7 @@ namespace Cyotek.Ini
 
     #endregion
 
-    #region Overridden Properties
+    #region Properties
 
     [Browsable(false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -57,7 +57,7 @@ namespace Cyotek.Ini
 
     #endregion
 
-    #region Overridden Methods
+    #region Methods
 
     public override IniToken Clone()
     {

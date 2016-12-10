@@ -8,7 +8,7 @@ namespace Cyotek.Ini
 {
   public class IniSectionToken : IniToken
   {
-    #region Public Constructors
+    #region Constructors
 
     public IniSectionToken()
       : this(string.Empty)
@@ -22,7 +22,7 @@ namespace Cyotek.Ini
 
     #endregion
 
-    #region Overridden Properties
+    #region Properties
 
     public override IniTokenType Type
     {
@@ -39,7 +39,7 @@ namespace Cyotek.Ini
 
     #endregion
 
-    #region Overridden Methods
+    #region Methods
 
     public override IniToken Clone()
     {
@@ -54,25 +54,11 @@ namespace Cyotek.Ini
       return result;
     }
 
-    public override void Write(TextWriter writer)
-    {
-      writer.WriteLine(string.Concat("[", this.Name, "]"));
-
-      base.Write(writer);
-
-      if (this.ChildTokens.All(t => t.Type == IniTokenType.Value))
-      {
-        writer.WriteLine();
-      }
-    }
-
-    #endregion
-
-    #region Public Members
-
     public IEnumerable<string> GetNames()
     {
-      return from token in this.ChildTokens where token.Type == IniTokenType.Value select token.Name;
+      return from token in this.ChildTokens
+             where token.Type == IniTokenType.Value
+             select token.Name;
     }
 
     public string GetValue(string valueName)
@@ -135,6 +121,18 @@ namespace Cyotek.Ini
       }
 
       return result;
+    }
+
+    public override void Write(TextWriter writer)
+    {
+      writer.WriteLine(string.Concat("[", this.Name, "]"));
+
+      base.Write(writer);
+
+      if (this.ChildTokens.All(t => t.Type == IniTokenType.Value))
+      {
+        writer.WriteLine();
+      }
     }
 
     #endregion

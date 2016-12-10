@@ -11,18 +11,19 @@ namespace Cyotek.Ini
 
     public static readonly char[] DefaultCommentCharacters =
     {
-      ';', '#'
+      ';',
+      '#'
     };
 
     #endregion
 
-    #region Instance Fields
+    #region Fields
 
     private bool _isLoadDeferred;
 
     #endregion
 
-    #region Public Constructors
+    #region Constructors
 
     public IniDocument()
     {
@@ -38,7 +39,7 @@ namespace Cyotek.Ini
 
     #endregion
 
-    #region Public Class Members
+    #region Static Methods
 
     public static string GetValue(string fileName, string sectionName, string valueName, string defaultValue)
     {
@@ -57,7 +58,7 @@ namespace Cyotek.Ini
 
     #endregion
 
-    #region Overridden Properties
+    #region Properties
 
     public override IniTokenCollection ChildTokens
     {
@@ -78,14 +79,18 @@ namespace Cyotek.Ini
       protected set { base.ChildTokens = value; }
     }
 
+    public string FileName { get; set; }
+
     public override IniTokenType Type
     {
       get { return IniTokenType.Document; }
     }
 
+    protected IniTokenCollection CurrentTokenCollection { get; set; }
+
     #endregion
 
-    #region Overridden Methods
+    #region Methods
 
     public override IniToken Clone()
     {
@@ -99,22 +104,6 @@ namespace Cyotek.Ini
 
       return result;
     }
-
-    #endregion
-
-    #region Public Properties
-
-    public string FileName { get; set; }
-
-    #endregion
-
-    #region Protected Properties
-
-    protected IniTokenCollection CurrentTokenCollection { get; set; }
-
-    #endregion
-
-    #region Public Members
 
     public IniToken CreateSection(string sectionName)
     {
@@ -364,10 +353,6 @@ namespace Cyotek.Ini
       ((IniSectionToken)sectionToken).SetValue(valueName, value);
     }
 
-    #endregion
-
-    #region Protected Members
-
     protected IniToken CreateToken(IniTokenType tokenType, string value)
     {
       IniToken token;
@@ -402,10 +387,6 @@ namespace Cyotek.Ini
     {
       return DefaultCommentCharacters;
     }
-
-    #endregion
-
-    #region Private Members
 
     private void GetNameAndValue(string line, out string name, out string value)
     {

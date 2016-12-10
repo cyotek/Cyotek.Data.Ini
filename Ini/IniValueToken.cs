@@ -4,7 +4,7 @@ namespace Cyotek.Ini
 {
   public class IniValueToken : IniToken
   {
-    #region Public Constructors
+    #region Constructors
 
     public IniValueToken()
     { }
@@ -18,7 +18,7 @@ namespace Cyotek.Ini
 
     #endregion
 
-    #region Overridden Properties
+    #region Properties
 
     public override IniTokenType Type
     {
@@ -27,7 +27,7 @@ namespace Cyotek.Ini
 
     #endregion
 
-    #region Overridden Methods
+    #region Methods
 
     public override IniToken Clone()
     {

@@ -6,7 +6,7 @@ namespace Cyotek.Ini
 {
   public class IniCommentToken : IniToken
   {
-    #region Public Constructors
+    #region Constructors
 
     public IniCommentToken()
       : this(null)
@@ -19,7 +19,7 @@ namespace Cyotek.Ini
 
     #endregion
 
-    #region Overridden Properties
+    #region Properties
 
     [Browsable(false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -36,7 +36,7 @@ namespace Cyotek.Ini
 
     #endregion
 
-    #region Overridden Methods
+    #region Methods
 
     public override IniToken Clone()
     {
