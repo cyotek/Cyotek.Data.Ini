@@ -1,0 +1,14 @@
+﻿<#@ include file="..\Collections\Collection.Setup.ttinclude" #>
+<#@ output extension=".cs" #>
+<#
+  CollectionOptions Options;
+  string Namespace;
+  string ClassName;
+  string ItemType;
+
+  Options = CollectionOptions.None;
+  Namespace = "Cyotek.Ini";
+  ClassName = "IniTokenCollection";
+  ItemType = "IniToken";
+#>
+<#@ include file="..\Collections\Collection.ttinclude" #>
