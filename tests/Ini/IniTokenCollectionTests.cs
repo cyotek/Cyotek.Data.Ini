@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using Cyotek.Ini;
 using Cyotek.Testing;
@@ -11,6 +10,53 @@ namespace Cyotek.Core.Tests.Ini
   internal class IniTokenCollectionTests : TestBase
   {
     #region  Tests
+
+    [Test]
+    public void IndexOf_returns_index_by_name()
+    {
+      // arrange
+      IniTokenCollection target;
+      int expected;
+      int actual;
+
+      target = new IniTokenCollection();
+      target.Add(new IniSectionToken("Alpha"));
+      target.Add(new IniSectionToken("Beta"));
+      target.Add(new IniSectionToken("Gamma"));
+
+      expected = 1;
+
+      // act
+      actual = target.IndexOf("Beta");
+
+      // assert
+      Assert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void IndexOf_returns_index_by_token()
+    {
+      // arrange
+      IniTokenCollection target;
+      IniSectionToken token;
+      int expected;
+      int actual;
+
+      token = new IniSectionToken("Beta");
+
+      target = new IniTokenCollection();
+      target.Add(new IniSectionToken("Alpha"));
+      target.Add(token);
+      target.Add(new IniSectionToken("Gamma"));
+
+      expected = 1;
+
+      // act
+      actual = target.IndexOf(token);
+
+      // assert
+      Assert.AreEqual(expected, actual);
+    }
 
     [Test]
     public void IndexOfNegativeTest()
@@ -84,53 +130,6 @@ namespace Cyotek.Core.Tests.Ini
       // assert
       actual = lookup.ContainsKey("Gamma");
       Assert.IsFalse(actual);
-    }
-
-    [Test]
-    public void IndexOf_returns_index_by_name()
-    {
-      // arrange
-      IniTokenCollection target;
-      int expected;
-      int actual;
-
-      target = new IniTokenCollection();
-      target.Add(new IniSectionToken("Alpha"));
-      target.Add(new IniSectionToken("Beta"));
-      target.Add(new IniSectionToken("Gamma"));
-
-      expected = 1;
-
-      // act
-      actual = target.IndexOf("Beta");
-
-      // assert
-      Assert.AreEqual(expected, actual);
-    }
-
-    [Test]
-    public void IndexOf_returns_index_by_token()
-    {
-      // arrange
-      IniTokenCollection target;
-      IniSectionToken token;
-      int expected;
-      int actual;
-
-      token = new IniSectionToken("Beta");
-
-      target = new IniTokenCollection();
-      target.Add(new IniSectionToken("Alpha"));
-      target.Add(token);
-      target.Add(new IniSectionToken("Gamma"));
-
-      expected = 1;
-
-      // act
-      actual = target.IndexOf(token);
-
-      // assert
-      Assert.AreEqual(expected, actual);
     }
 
     #endregion

@@ -376,8 +376,7 @@ namespace Cyotek.Ini
         case IniTokenType.Unknown:
           token = new IniRawToken(value);
           break;
-        default:
-          throw new ArgumentOutOfRangeException(nameof(tokenType));
+        default: throw new ArgumentOutOfRangeException(nameof(tokenType));
       }
 
       return token;
