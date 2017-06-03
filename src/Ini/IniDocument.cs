@@ -27,7 +27,7 @@ namespace Cyotek.Ini
 
     public IniDocument()
     {
-      this.ChildTokens = new IniTokenCollection();
+      base.ChildTokens = new IniTokenCollection();
     }
 
     public IniDocument(string fileName)
@@ -113,6 +113,7 @@ namespace Cyotek.Ini
       {
         throw new ArgumentNullException(nameof(sectionName));
       }
+
       if (!this.ChildTokens.TryGetValue(sectionName, out sectionToken))
       {
         sectionToken = new IniSectionToken(sectionName);
