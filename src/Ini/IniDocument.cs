@@ -121,7 +121,7 @@ namespace Cyotek.Ini
       }
       else if (sectionToken.Type != IniTokenType.Section)
       {
-        throw new InvalidDataException($"A token named '{sectionName}' already exists, but is not a section token.");
+        throw new InvalidDataException(string.Format("A token named '{0}' already exists, but is not a section token.", sectionName));
       }
 
       return sectionToken;
@@ -194,7 +194,7 @@ namespace Cyotek.Ini
 
       if (sectionToken != null && sectionToken.Type != IniTokenType.Section)
       {
-        throw new InvalidDataException($"A token named '{sectionName}' already exists, but is not a section token.");
+        throw new InvalidDataException(string.Format("A token named '{0}' already exists, but is not a section token.", sectionName));
       }
 
       return sectionToken;
