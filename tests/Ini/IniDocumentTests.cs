@@ -1,15 +1,49 @@
-﻿using System;
-using System.IO;
-using Cyotek.Ini;
+﻿using Cyotek.Ini;
 using Cyotek.Testing;
 using NUnit.Framework;
+using System;
+using System.IO;
 
 namespace Cyotek.Core.Tests.Ini
 {
   [TestFixture]
   internal class IniDocumentTests : TestBase
   {
-    #region  Tests
+    #region Protected Fields
+
+    protected const string SampleIni = @"; this is a comment
+
+# this is also a comment
+
+[Settings]
+longTest=9223372036854775807
+shortTest=32767
+stringTest=HELLO WORLD THIS IS A TEST STRING ÅÄÖ!
+floatTest=0.4982315
+intTest=2147483647
+byteTest=127
+doubleTest=0.493128713218231
+  
+[ham]
+name=Hampus
+value=0.75
+
+[egg]
+name=Eggbert
+value=0.5
+
+
+this is a bad value";
+
+    #endregion Protected Fields
+
+    #region Private Fields
+
+    private const int _expectedMissingIndex = -1;
+
+    #endregion Private Fields
+
+    #region Public Methods
 
     [Test]
     public void ConstructorTest()
@@ -347,6 +381,74 @@ namespace Cyotek.Core.Tests.Ini
     }
 
     [Test]
+    public void RawLoadTest()
+    {
+      // arrange
+      IniDocument target;
+      string expected;
+      string actual;
+      StringWriter output;
+      
+      expected = @"[Meta]
+alpha=beta
+
+[Tags]
+gamma
+delta
+epsilon";
+
+      target = new IniDocument();
+      target.LoadIni(expected);
+
+      output = new StringWriter();
+
+      // act
+      target.Save(output);
+
+      // assert
+      actual = output.ToString();
+      output.Dispose();
+      Assert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void RawSaveTest()
+    {
+      // arrange
+      IniDocument target;
+      string expected;
+      string actual;
+      StringWriter output;
+      IniSectionToken tags;
+
+      target = new IniDocument();
+      target.SetValue("Meta", "alpha", "beta");
+
+      tags = (IniSectionToken)target.CreateSection("Tags");
+      tags.ChildTokens.Add(new IniRawToken("gamma"));
+      tags.ChildTokens.Add(new IniRawToken("delta"));
+      tags.ChildTokens.Add(new IniRawToken("epsilon"));
+
+      output = new StringWriter();
+
+      expected = @"[Meta]
+alpha=beta
+
+[Tags]
+gamma
+delta
+epsilon";
+
+      // act
+      target.Save(output);
+
+      // assert
+      actual = output.ToString();
+      output.Dispose();
+      Assert.AreEqual(expected, actual);
+    }
+
+    [Test]
     public void SaveTest()
     {
       // arrange
@@ -542,35 +644,9 @@ Value1=Three";
       Assert.AreEqual(expected, actual);
     }
 
-    #endregion
+    #endregion Public Methods
 
-    #region Test Helpers
-
-    protected const string SampleIni = @"; this is a comment
-
-# this is also a comment
-
-[Settings]
-longTest=9223372036854775807
-shortTest=32767
-stringTest=HELLO WORLD THIS IS A TEST STRING ÅÄÖ!
-floatTest=0.4982315
-intTest=2147483647
-byteTest=127
-doubleTest=0.493128713218231
-  
-[ham]
-name=Hampus
-value=0.75
-
-[egg]
-name=Eggbert
-value=0.5
-
-
-this is a bad value";
-
-    private const int _expectedMissingIndex = -1;
+    #region Protected Methods
 
     protected void CompareDocuments(IniDocument expected, IniDocument actual)
     {
@@ -617,6 +693,6 @@ this is a bad value";
       return result;
     }
 
-    #endregion
+    #endregion Protected Methods
   }
 }
