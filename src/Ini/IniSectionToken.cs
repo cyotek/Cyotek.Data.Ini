@@ -46,6 +46,7 @@ namespace Cyotek.Ini
       IniSectionToken result;
 
       result = new IniSectionToken();
+      
       foreach (IniToken token in this.ChildTokens)
       {
         result.ChildTokens.Add(token.Clone());
@@ -69,19 +70,15 @@ namespace Cyotek.Ini
     public string GetValue(string name, string defaultValue)
     {
       IniToken valueToken;
-      string result;
-
+      
       valueToken = this.GetValueToken(name);
-      result = valueToken == null ? defaultValue : valueToken.Value;
-
-      return result;
+      
+      return valueToken == null ? defaultValue : valueToken.Value;
     }
 
     public IniValueToken GetValueToken(string name)
     {
-      IniToken valueToken;
-
-      this.ChildTokens.TryGetValue(name, out valueToken);
+      this.ChildTokens.TryGetValue(name, out IniToken valueToken);
 
       if (valueToken != null && valueToken.Type != IniTokenType.Value)
       {
@@ -93,17 +90,30 @@ namespace Cyotek.Ini
 
     public bool SetValue(string name, string value)
     {
-      IniToken valueToken;
       bool result;
+      IniTokenCollection children;
 
       if (string.IsNullOrEmpty(name))
       {
         throw new ArgumentNullException(nameof(name));
       }
 
-      if (!this.ChildTokens.TryGetValue(name, out valueToken))
+      children = this.ChildTokens;
+
+      if (!children.TryGetValue(name, out IniToken valueToken))
       {
-        this.ChildTokens.Add(new IniValueToken(name, value));
+        int index;
+
+        index = IniSectionToken.GetInsertionIndex(children);
+
+        if (index != -1)
+        {
+          children.Insert(index, new IniValueToken(name, value));
+        }
+        else
+        {
+          children.Add(new IniValueToken(name, value));
+        }
         result = true;
       }
       else if (valueToken.Type != IniTokenType.Value)
@@ -121,6 +131,27 @@ namespace Cyotek.Ini
       }
 
       return result;
+    }
+
+    private static int GetInsertionIndex(IniTokenCollection children)
+    {
+      int index;
+
+      index = -1;
+
+      for (int i = children.Count - 1; i >= 0; i--)
+      {
+        if (children[i].Type == IniTokenType.Whitespace)
+        {
+          index = i;
+        }
+        else
+        {
+          break;
+        }
+      }
+
+      return index;
     }
 
     public override void Write(TextWriter writer)

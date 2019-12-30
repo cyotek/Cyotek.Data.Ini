@@ -7,7 +7,7 @@ namespace Cyotek.Ini
 {
   public class IniDocument : IniToken
   {
-    #region Constants
+    #region Public Fields
 
     public static readonly char[] DefaultCommentCharacters =
     {
@@ -15,15 +15,17 @@ namespace Cyotek.Ini
       '#'
     };
 
-    #endregion
+    #endregion Public Fields
 
-    #region Fields
+    #region Private Fields
+
+    private string _fileName;
 
     private bool _isLoadDeferred;
 
-    #endregion
+    #endregion Private Fields
 
-    #region Constructors
+    #region Public Constructors
 
     public IniDocument()
     {
@@ -34,12 +36,55 @@ namespace Cyotek.Ini
       : this()
     {
       _isLoadDeferred = true;
-      this.FileName = fileName;
+      _fileName = fileName;
     }
 
-    #endregion
+    #endregion Public Constructors
 
-    #region Static Methods
+    #region Public Properties
+
+    public override IniTokenCollection ChildTokens
+    {
+      get
+      {
+        if (_isLoadDeferred)
+        {
+          _isLoadDeferred = false;
+
+          if (File.Exists(_fileName))
+          {
+            this.Load(_fileName);
+          }
+        }
+
+        return base.ChildTokens;
+      }
+      protected set
+      {
+        base.ChildTokens = value;
+      }
+    }
+
+    public string FileName
+    {
+      get { return _fileName; }
+      set { _fileName = value; }
+    }
+
+    public override IniTokenType Type
+    {
+      get { return IniTokenType.Document; }
+    }
+
+    #endregion Public Properties
+
+    #region Protected Properties
+
+    protected IniTokenCollection CurrentTokenCollection { get; set; }
+
+    #endregion Protected Properties
+
+    #region Public Methods
 
     public static string GetValue(string fileName, string sectionName, string valueName, string defaultValue)
     {
@@ -56,42 +101,6 @@ namespace Cyotek.Ini
       document.Save();
     }
 
-    #endregion
-
-    #region Properties
-
-    public override IniTokenCollection ChildTokens
-    {
-      get
-      {
-        if (_isLoadDeferred)
-        {
-          _isLoadDeferred = false;
-
-          if (File.Exists(this.FileName))
-          {
-            this.Load(this.FileName);
-          }
-        }
-
-        return base.ChildTokens;
-      }
-      protected set { base.ChildTokens = value; }
-    }
-
-    public string FileName { get; set; }
-
-    public override IniTokenType Type
-    {
-      get { return IniTokenType.Document; }
-    }
-
-    protected IniTokenCollection CurrentTokenCollection { get; set; }
-
-    #endregion
-
-    #region Methods
-
     public override IniToken Clone()
     {
       IniDocument result;
@@ -107,14 +116,12 @@ namespace Cyotek.Ini
 
     public IniToken CreateSection(string sectionName)
     {
-      IniToken sectionToken;
-
       if (string.IsNullOrEmpty(sectionName))
       {
         throw new ArgumentNullException(nameof(sectionName));
       }
 
-      if (!this.ChildTokens.TryGetValue(sectionName, out sectionToken))
+      if (!this.ChildTokens.TryGetValue(sectionName, out IniToken sectionToken))
       {
         sectionToken = new IniSectionToken(sectionName);
         this.ChildTokens.Add(sectionToken);
@@ -151,7 +158,6 @@ namespace Cyotek.Ini
 
     public bool DeleteValue(string sectionName, string valueName)
     {
-      IniToken sectionToken;
       bool result;
 
       if (string.IsNullOrEmpty(sectionName))
@@ -166,11 +172,12 @@ namespace Cyotek.Ini
 
       result = false;
 
-      if (this.ChildTokens.TryGetValue(sectionName, out sectionToken))
+      if (this.ChildTokens.TryGetValue(sectionName, out IniToken sectionToken))
       {
         int valueIndex;
 
         valueIndex = sectionToken.ChildTokens.IndexOf(valueName);
+
         if (valueIndex != -1)
         {
           sectionToken.ChildTokens.RemoveAt(valueIndex);
@@ -183,14 +190,12 @@ namespace Cyotek.Ini
 
     public IniToken GetSection(string sectionName)
     {
-      IniToken sectionToken;
-
       if (string.IsNullOrEmpty(sectionName))
       {
         throw new ArgumentNullException(nameof(sectionName));
       }
 
-      this.ChildTokens.TryGetValue(sectionName, out sectionToken);
+      this.ChildTokens.TryGetValue(sectionName, out IniToken sectionToken);
 
       if (sectionToken != null && sectionToken.Type != IniTokenType.Section)
       {
@@ -208,7 +213,6 @@ namespace Cyotek.Ini
     public string GetValue(string sectionName, string valueName, string defaultValue)
     {
       IniToken sectionToken;
-      string result;
 
       if (string.IsNullOrEmpty(valueName))
       {
@@ -216,14 +220,13 @@ namespace Cyotek.Ini
       }
 
       sectionToken = this.GetSection(sectionName);
-      result = sectionToken != null ? ((IniSectionToken)sectionToken).GetValue(valueName, defaultValue) : defaultValue;
 
-      return result;
+      return sectionToken != null ? ((IniSectionToken)sectionToken).GetValue(valueName, defaultValue) : defaultValue;
     }
 
     public void Load()
     {
-      this.Load(this.FileName);
+      this.Load(_fileName);
     }
 
     public void Load(string fileName)
@@ -304,7 +307,7 @@ namespace Cyotek.Ini
 
     public void Save()
     {
-      this.Save(this.FileName);
+      this.Save(_fileName);
     }
 
     public void Save(TextWriter writer)
@@ -341,6 +344,7 @@ namespace Cyotek.Ini
         throw new ArgumentNullException(nameof(fileName));
       }
 
+      // need to use FileMode.Truncate if you want to overwrite a hidden file
       mode = File.Exists(fileName) ? FileMode.Truncate : FileMode.Create;
 
       using (Stream stream = new FileStream(fileName, mode, FileAccess.Write))
@@ -358,6 +362,10 @@ namespace Cyotek.Ini
       ((IniSectionToken)sectionToken).SetValue(valueName, value);
     }
 
+    #endregion Public Methods
+
+    #region Protected Methods
+
     protected IniToken CreateToken(IniTokenType tokenType, string value)
     {
       IniToken token;
@@ -367,20 +375,25 @@ namespace Cyotek.Ini
         case IniTokenType.Comment:
           token = new IniCommentToken(value);
           break;
+
         case IniTokenType.Whitespace:
           token = new IniWhitespaceToken(value);
           break;
+
         case IniTokenType.Value:
           string name;
           this.GetNameAndValue(value, out name, out value);
           token = new IniValueToken(name, value);
           break;
+
         case IniTokenType.Section:
           token = new IniSectionToken(this.GetSectionName(value));
           break;
+
         case IniTokenType.Unknown:
           token = new IniRawToken(value);
           break;
+
         default: throw new ArgumentOutOfRangeException(nameof(tokenType));
       }
 
@@ -391,6 +404,10 @@ namespace Cyotek.Ini
     {
       return DefaultCommentCharacters;
     }
+
+    #endregion Protected Methods
+
+    #region Private Methods
 
     private void GetNameAndValue(string line, out string name, out string value)
     {
@@ -448,6 +465,6 @@ namespace Cyotek.Ini
       return result;
     }
 
-    #endregion
+    #endregion Private Methods
   }
 }

@@ -449,6 +449,32 @@ epsilon";
     }
 
     [Test]
+    public void Save_WithHiddenFile_Test()
+    {
+      using (TemporaryFile workFile = new TemporaryFile())
+      {
+        // arrange
+        IniDocument target;
+        IniDocument actual;
+
+        target = this.GetSampleDocument();
+        target.Save(workFile.FileName);
+        target.SetValue("Settings", "stringTest", "SAD FACE");
+
+        File.SetAttributes(workFile.FileName, FileAttributes.Hidden);
+
+        // act
+        target.Save(workFile.FileName);
+
+        // assert
+        actual = new IniDocument();
+        actual.Load(workFile.FileName);
+        Assert.IsTrue((File.GetAttributes(workFile.FileName) & FileAttributes.Hidden) != 0);
+        this.CompareDocuments(target, actual);
+      }
+    }
+
+    [Test]
     public void SaveTest()
     {
       // arrange
@@ -475,31 +501,47 @@ epsilon";
       this.CompareDocuments(target, actual);
     }
 
-
     [Test]
-    public void Save_WithHiddenFile_Test()
+    public void SetValue_WithExistingWhitespace_InsertsBefore()
     {
-      using (TemporaryFile workFile = new TemporaryFile())
-      {
-        // arrange
-        IniDocument target;
-        IniDocument actual;
+      // arrange
+      IniDocument target;
+      string expected;
+      string actual;
+      StringWriter writer;
 
-        target = this.GetSampleDocument();
-        target.Save(workFile.FileName);
-        target.SetValue("Settings", "stringTest", "SAD FACE");
+      target = new IniDocument();
+      target.LoadIni(@"[Meta]
+Created=2019-12-24T21:04:13.5777065+00:00
+Modified=2019-12-24T21:42:36.1605544Z
+Options=None
 
-        File.SetAttributes(workFile.FileName, FileAttributes.Hidden);
+[Properties]
+[Tags]
+animation
+gif");
 
-        // act
-        target.Save(workFile.FileName);
+      writer = new StringWriter();
 
-        // assert
-        actual = new IniDocument();
-        actual.Load(workFile.FileName);
-        Assert.IsTrue((File.GetAttributes(workFile.FileName) & FileAttributes.Hidden) != 0);
-        this.CompareDocuments(target, actual);
-      }
+      expected = @"[Meta]
+Created=2019-12-24T21:04:13.5777065+00:00
+Modified=2019-12-24T21:42:36.1605544Z
+Options=None
+
+[Properties]
+alpha=beta
+
+[Tags]
+animation
+gif";
+
+      // act
+      target.SetValue("Properties", "alpha", "beta");
+
+      // assert
+      target.Save(writer);
+      actual = writer.ToString();
+      Assert.AreEqual(expected, actual);
     }
 
     [Test]
