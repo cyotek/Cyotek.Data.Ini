@@ -334,12 +334,16 @@ namespace Cyotek.Ini
 
     public void Save(string fileName)
     {
+      FileMode mode;
+
       if (string.IsNullOrEmpty(fileName))
       {
         throw new ArgumentNullException(nameof(fileName));
       }
 
-      using (Stream stream = File.Create(fileName))
+      mode = File.Exists(fileName) ? FileMode.Truncate : FileMode.Create;
+
+      using (Stream stream = new FileStream(fileName, mode, FileAccess.Write))
       {
         this.Save(stream);
       }

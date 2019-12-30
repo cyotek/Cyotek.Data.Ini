@@ -388,7 +388,7 @@ this is a bad value";
       string expected;
       string actual;
       StringWriter output;
-      
+
       expected = @"[Meta]
 alpha=beta
 
@@ -473,6 +473,33 @@ epsilon";
 
       // assert
       this.CompareDocuments(target, actual);
+    }
+
+
+    [Test]
+    public void Save_WithHiddenFile_Test()
+    {
+      using (TemporaryFile workFile = new TemporaryFile())
+      {
+        // arrange
+        IniDocument target;
+        IniDocument actual;
+
+        target = this.GetSampleDocument();
+        target.Save(workFile.FileName);
+        target.SetValue("Settings", "stringTest", "SAD FACE");
+
+        File.SetAttributes(workFile.FileName, FileAttributes.Hidden);
+
+        // act
+        target.Save(workFile.FileName);
+
+        // assert
+        actual = new IniDocument();
+        actual.Load(workFile.FileName);
+        Assert.IsTrue((File.GetAttributes(workFile.FileName) & FileAttributes.Hidden) != 0);
+        this.CompareDocuments(target, actual);
+      }
     }
 
     [Test]
