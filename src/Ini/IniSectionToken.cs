@@ -46,7 +46,7 @@ namespace Cyotek.Ini
       IniSectionToken result;
 
       result = new IniSectionToken();
-      
+
       foreach (IniToken token in this.ChildTokens)
       {
         result.ChildTokens.Add(token.Clone());
@@ -70,9 +70,9 @@ namespace Cyotek.Ini
     public string GetValue(string name, string defaultValue)
     {
       IniToken valueToken;
-      
+
       valueToken = this.GetValueToken(name);
-      
+
       return valueToken == null ? defaultValue : valueToken.Value;
     }
 
