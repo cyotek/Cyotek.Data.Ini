@@ -10,7 +10,8 @@ namespace Cyotek.Ini
 
     public IniRawToken()
       : this(string.Empty)
-    { }
+    {
+    }
 
     public IniRawToken(string value)
     {

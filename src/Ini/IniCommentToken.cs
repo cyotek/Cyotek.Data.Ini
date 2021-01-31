@@ -10,7 +10,8 @@ namespace Cyotek.Ini
 
     public IniCommentToken()
       : this(null)
-    { }
+    {
+    }
 
     public IniCommentToken(string value)
     {

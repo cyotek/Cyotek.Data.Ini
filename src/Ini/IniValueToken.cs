@@ -7,7 +7,8 @@ namespace Cyotek.Ini
     #region Constructors
 
     public IniValueToken()
-    { }
+    {
+    }
 
     public IniValueToken(string name, string value)
       : this()

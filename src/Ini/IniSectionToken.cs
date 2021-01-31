@@ -12,7 +12,8 @@ namespace Cyotek.Ini
 
     public IniSectionToken()
       : this(string.Empty)
-    { }
+    {
+    }
 
     public IniSectionToken(string name)
     {

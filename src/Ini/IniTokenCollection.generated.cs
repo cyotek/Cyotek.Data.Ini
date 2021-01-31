@@ -14,12 +14,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Cyotek.Collections;
-using JetBrains.Annotations;
 
 namespace Cyotek.Ini
 {
 
-  partial class IniTokenCollection : IList<IniToken>, IReadOnlyList<IniToken>  {
+  partial class IniTokenCollection 
+    : IList<IniToken>, IList, IReadOnlyList<IniToken>  {
     #region Constants
 
     private readonly IList<IniToken> _items;
@@ -386,6 +386,98 @@ namespace Cyotek.Ini
     #endregion
 
     
+    #region IList & ICollection
+
+    int IList.Add(object value)
+    {
+      if (value is IniToken item)
+      {
+        this.Add(item);
+        return this.IndexOf(item);
+      }
+      else
+      {
+        throw new ArgumentException("Value must be of type IniToken.", nameof(value));
+      }
+    }
+
+    bool IList.Contains(object value)
+    {
+      return value is IniToken item && this.Contains(item);
+    }
+
+    int IList.IndexOf(object value)
+    {
+      return value is IniToken item
+        ? this.IndexOf(item)
+        : -1;
+    }
+
+    void IList.Insert(int index, object value)
+    {
+      if (value is IniToken item)
+      {
+        this.Insert(index, item);
+      }
+      else
+      {
+        throw new ArgumentException("Value must be of type IniToken.", nameof(value));
+      }
+    }
+
+    void IList.Remove(object value)
+    {
+      if (value is IniToken item)
+      {
+        this.Remove(item);
+      }
+      else
+      {
+        throw new ArgumentException("Value must be of type IniToken.", nameof(value));
+      }
+    }
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      for (int i = 0; i < _items.Count; i++)
+      {
+        array.SetValue(_items[i], index + i);
+      }
+    }
+
+    bool IList.IsFixedSize
+    {
+      get { return false; }
+    }
+
+    object ICollection.SyncRoot
+    {
+      get { return this; }
+    }
+
+    bool ICollection.IsSynchronized
+    {
+      get { return false; }
+    }
+
+    object IList.this[int index]
+    {
+      get { return this[index]; }
+      set
+      {
+        if (value is IniToken item)
+        {
+          this[index] = item;
+        }
+        else
+        {
+          throw new ArgumentException("Value must be of type IniToken.", nameof(value));
+        }
+      }
+    }
+
+    #endregion
+
   }
 }
 

@@ -17,7 +17,8 @@ namespace Cyotek.Ini
 
     public IniWhitespaceToken()
       : this(string.Empty)
-    { }
+    {
+    }
 
     public IniWhitespaceToken(string value)
     {
