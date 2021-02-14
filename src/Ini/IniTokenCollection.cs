@@ -26,25 +26,29 @@ namespace Cyotek.Ini
     {
       int index;
 
-      if (!_nameToIndexLookup.TryGetValue(name, out index) || index < 0 || index > this.Count - 1 || !this[index].Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+      if (name != null)
       {
-        // missing index, or not found, out of bounds, etc
-        index = -1;
-        _nameToIndexLookup.Remove(name);
-
-        for (int i = 0; i < this.Count; i++)
+        if (!_nameToIndexLookup.TryGetValue(name, out index) || index < 0 || index > this.Count - 1 || !string.Equals(this[index].Name, name, StringComparison.OrdinalIgnoreCase))
         {
-          string itemName;
+          // missing index, or not found, out of bounds, etc
+          index = -1;
 
-          itemName = this[i].Name;
+          _nameToIndexLookup.Remove(name);
 
-          if (itemName != null && itemName.Equals(name, StringComparison.OrdinalIgnoreCase))
+          for (int i = 0; i < this.Count; i++)
           {
-            _nameToIndexLookup.Add(name, i);
-            index = i;
-            break;
+            if (string.Equals(this[i].Name, name, StringComparison.OrdinalIgnoreCase))
+            {
+              _nameToIndexLookup.Add(name, i);
+              index = i;
+              break;
+            }
           }
         }
+      }
+      else
+      {
+        index = -1;
       }
 
       return index;
