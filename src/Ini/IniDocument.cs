@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace Cyotek.Ini
@@ -434,7 +433,7 @@ namespace Cyotek.Ini
     {
       IniTokenType result;
 
-      if (string.IsNullOrEmpty(line) || line.All(char.IsWhiteSpace))
+      if (string.IsNullOrEmpty(line) || string.IsNullOrWhiteSpace(line))
       {
         result = IniTokenType.Whitespace;
       }

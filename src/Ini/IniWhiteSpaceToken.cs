@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 
 namespace Cyotek.Ini
 {
@@ -47,7 +46,7 @@ namespace Cyotek.Ini
       get { return _value; }
       set
       {
-        if (!string.IsNullOrEmpty(value) && !value.All(char.IsWhiteSpace))
+        if (!string.IsNullOrEmpty(value) && !string.IsNullOrWhiteSpace(value))
         {
           throw new ArgumentException("Value can only contain whitespace characters.", nameof(value));
         }

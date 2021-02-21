@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 
 namespace Cyotek.Ini
 {
@@ -58,9 +57,13 @@ namespace Cyotek.Ini
 
     public IEnumerable<string> GetNames()
     {
-      return from token in this.ChildTokens
-             where token.Type == IniTokenType.Value
-             select token.Name;
+      foreach(IniToken token in this.ChildTokens)
+      {
+        if(token.Type == IniTokenType.Value)
+        {
+          yield return token.Name;
+        }
+      }
     }
 
     public string GetValue(string valueName)
@@ -161,10 +164,28 @@ namespace Cyotek.Ini
 
       base.Write(writer);
 
-      if (this.ChildTokens.All(t => t.Type == IniTokenType.Value))
+      if (this.AreAllChildrenValues())
       {
         writer.WriteLine();
       }
+    }
+
+    private bool AreAllChildrenValues()
+    {
+      bool result;
+
+      result = true;
+
+      foreach(IniToken token in this.ChildTokens)
+      {
+        if(token.Type!= IniTokenType.Value)
+        {
+          result = false;
+          break;
+        }
+      }
+
+      return result;
     }
 
     #endregion
