@@ -145,7 +145,7 @@ namespace Cyotek.Ini
 
       for (int i = children.Count - 1; i >= 0; i--)
       {
-        if (children[i].Type == IniTokenType.Whitespace)
+        if (children[i].Type == IniTokenType.Whitespace || children[i].Type == IniTokenType.Comment)
         {
           index = i;
         }
