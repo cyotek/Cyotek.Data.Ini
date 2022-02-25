@@ -23,6 +23,9 @@ floatTest=0.4982315
 intTest=2147483647
 byteTest=127
 doubleTest=0.493128713218231
+colorTest=Crimson
+fontTest=Arial,13,""Italic, Strikeout""
+blank=
   
 [ham]
 name=Hampus
@@ -742,6 +745,9 @@ Value1=Three";
       section.ChildTokens.Add(new IniValueToken("intTest", "2147483647"));
       section.ChildTokens.Add(new IniValueToken("byteTest", "127"));
       section.ChildTokens.Add(new IniValueToken("doubleTest", "0.493128713218231"));
+      section.ChildTokens.Add(new IniValueToken("colorTest", "Crimson"));
+      section.ChildTokens.Add(new IniValueToken("fontTest", "Arial,13,\"Italic, Strikeout\""));
+      section.ChildTokens.Add(new IniValueToken("blank", string.Empty));
       section.ChildTokens.Add(new IniWhitespaceToken("  "));
       result.ChildTokens.Add(section);
 
