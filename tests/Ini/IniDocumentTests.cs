@@ -25,6 +25,7 @@ byteTest=127
 doubleTest=0.493128713218231
 colorTest=Crimson
 fontTest=Arial,13,""Italic, Strikeout""
+enumTest=Bold, Italic
 blank=
   
 [ham]
@@ -747,6 +748,7 @@ Value1=Three";
       section.ChildTokens.Add(new IniValueToken("doubleTest", "0.493128713218231"));
       section.ChildTokens.Add(new IniValueToken("colorTest", "Crimson"));
       section.ChildTokens.Add(new IniValueToken("fontTest", "Arial,13,\"Italic, Strikeout\""));
+      section.ChildTokens.Add(new IniValueToken("enumTest", "Bold, Italic"));
       section.ChildTokens.Add(new IniValueToken("blank", string.Empty));
       section.ChildTokens.Add(new IniWhitespaceToken("  "));
       result.ChildTokens.Add(section);
