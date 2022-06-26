@@ -85,7 +85,7 @@ this is a bad value";
       string expectedSectionName;
 
       target = new IniDocument();
-      expectedSectionName = this.GetRandomString();
+      expectedSectionName = "alpha";
       expected = target.CreateSection(expectedSectionName);
 
       // act
@@ -117,7 +117,7 @@ this is a bad value";
       string expectedSectionName;
 
       target = new IniDocument();
-      expectedSectionName = this.GetRandomString();
+      expectedSectionName = "beta";
 
       // act
       actual = target.CreateSection(expectedSectionName);
@@ -150,7 +150,7 @@ this is a bad value";
       bool actual;
 
       target = new IniDocument();
-      expectedSectionName = this.GetRandomString();
+      expectedSectionName = "gamma";
 
       // act
       actual = target.DeleteSection(expectedSectionName);
@@ -168,7 +168,7 @@ this is a bad value";
       bool actual;
 
       target = new IniDocument();
-      expectedSectionName = this.GetRandomString();
+      expectedSectionName = "delta";
 
       target.ChildTokens.Add(new IniSectionToken(expectedSectionName));
 
@@ -218,8 +218,8 @@ this is a bad value";
       bool actual;
 
       target = new IniDocument();
-      expectedSectionName = this.GetRandomString();
-      expectedValueName = this.GetRandomString();
+      expectedSectionName = "epsilon";
+      expectedValueName = "zeta";
 
       // act
       actual = target.DeleteValue(expectedSectionName, expectedValueName);
@@ -239,9 +239,9 @@ this is a bad value";
       bool actual;
 
       target = new IniDocument();
-      expectedSectionName = this.GetRandomString();
-      expectedValueName = this.GetRandomString();
-      expectedValue = this.GetRandomString();
+      expectedSectionName = "eta";
+      expectedValueName = "theta";
+      expectedValue = "iota";
 
       target.SetValue(expectedSectionName, expectedValueName, expectedValue);
       target.DeleteValue(expectedSectionName, expectedValueName);
@@ -264,9 +264,9 @@ this is a bad value";
       bool actual;
 
       target = new IniDocument();
-      expectedSectionName = this.GetRandomString();
-      expectedValueName = this.GetRandomString();
-      expectedValue = this.GetRandomString();
+      expectedSectionName = "kappa";
+      expectedValueName = "lambda";
+      expectedValue = "mu";
 
       target.SetValue(expectedSectionName, expectedValueName, expectedValue);
 
@@ -288,7 +288,7 @@ this is a bad value";
 
       target = new IniDocument();
       expectedSectionName = "Section";
-      expectedValue = this.GetRandomString();
+      expectedValue = "nu";
 
       target.ChildTokens.Add(new IniValueToken(expectedSectionName, expectedValue));
 
@@ -536,7 +536,7 @@ gif";
 
       target = new IniDocument();
       expectedSectionName = "Value";
-      expectedValue = this.GetRandomString();
+      expectedValue = "xi";
 
       // act & assert
       Assert.Throws<ArgumentNullException>(() => target.SetValue(expectedSectionName, null, expectedValue));
@@ -555,7 +555,7 @@ gif";
       target = new IniDocument();
       expectedSectionName = "Section";
       expectedValueName = "Value";
-      expectedValue = this.GetRandomString();
+      expectedValue = "omicron";
 
       sectionToken = new IniSectionToken(expectedSectionName);
       target.ChildTokens.Add(sectionToken);
@@ -574,15 +574,14 @@ gif";
       using (TemporaryFile workFile = new TemporaryFile())
       {
         // arrange
-        string fileName;
         string expectedSectionName;
         string expectedValueName;
         string expectedValue;
         IniDocument actual;
 
-        expectedSectionName = this.GetRandomString();
-        expectedValueName = this.GetRandomString();
-        expectedValue = this.GetRandomString();
+        expectedSectionName = "pi";
+        expectedValueName = "rho";
+        expectedValue = "sigma";
 
         // act
         IniDocument.SetValue(workFile.FileName, expectedSectionName, expectedValueName, expectedValue);
@@ -606,9 +605,9 @@ gif";
       string expectedValue;
 
       target = new IniDocument();
-      expectedSectionName = this.GetRandomString();
-      expectedValueName = this.GetRandomString();
-      expectedValue = this.GetRandomString();
+      expectedSectionName = "tau";
+      expectedValueName = "upsilon";
+      expectedValue = "phi";
 
       // act
       target.SetValue(expectedSectionName, expectedValueName, expectedValue);
@@ -629,10 +628,10 @@ gif";
       string expectedValue;
 
       target = new IniDocument();
-      expectedSectionName = this.GetRandomString();
-      expectedValueName = this.GetRandomString();
-      expectedValue = this.GetRandomString();
-      target.SetValue(expectedSectionName, expectedValueName, this.GetRandomString());
+      expectedSectionName = "chi";
+      expectedValueName = "psi";
+      expectedValue = "omega";
+      target.SetValue(expectedSectionName, expectedValueName, "alpha");
 
       // act
       target.SetValue(expectedSectionName, expectedValueName, expectedValue);

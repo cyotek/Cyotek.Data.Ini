@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using System;
 using System.IO;
 
 namespace Cyotek.Data.Ini.Tests
@@ -15,12 +14,6 @@ namespace Cyotek.Data.Ini.Tests
     #region Protected Methods
 
     protected string GetDataFileName(string baseName) => Path.Combine(this.DataDirectory, baseName);
-
-    [Obsolete("Tests should be deterministic.")]
-    protected string GetRandomString()
-    {
-      return Guid.NewGuid().ToString("n");
-    }
 
     #endregion Protected Methods
   }

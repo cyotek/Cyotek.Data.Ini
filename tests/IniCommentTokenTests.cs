@@ -35,7 +35,7 @@ namespace Cyotek.Data.Ini.Tests
       IniTokenType expectedType;
 
       expectedType = IniTokenType.Comment;
-      expected = this.GetRandomString();
+      expected = "alpha";
 
       // act
       target = new IniCommentToken(expected);
@@ -55,7 +55,7 @@ namespace Cyotek.Data.Ini.Tests
       string actual;
       string value;
 
-      value = this.GetRandomString();
+      value = "beta";
       expected = string.Concat("; ", value);
       target = new IniCommentToken(value);
 
