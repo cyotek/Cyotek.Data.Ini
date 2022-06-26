@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Cyotek.Ini
+namespace Cyotek.Data.Ini
 {
   public partial class IniTokenCollection
   {

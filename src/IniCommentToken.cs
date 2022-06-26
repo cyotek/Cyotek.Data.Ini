@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 
-namespace Cyotek.Ini
+namespace Cyotek.Data.Ini
 {
   public class IniCommentToken : IniToken
   {

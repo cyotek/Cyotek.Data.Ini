@@ -12,9 +12,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Cyotek.Collections;
 
-namespace Cyotek.Ini
+namespace Cyotek.Data.Ini
 {
 
   partial class IniTokenCollection 

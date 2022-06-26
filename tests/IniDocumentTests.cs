@@ -4,7 +4,7 @@ using NUnit.Framework;
 using System;
 using System.IO;
 
-namespace Cyotek.Core.Tests.Ini
+namespace Cyotek.Data.Ini.Tests
 {
   [TestFixture]
   internal class IniDocumentTests : TestBase

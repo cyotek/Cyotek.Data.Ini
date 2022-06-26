@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Cyotek.Ini
+namespace Cyotek.Data.Ini
 {
   public class IniValueToken : IniToken
   {

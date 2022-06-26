@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace Cyotek.Ini
+namespace Cyotek.Data.Ini
 {
   public class IniDocument : IniToken
   {

@@ -1,4 +1,4 @@
-﻿namespace Cyotek.Ini
+﻿namespace Cyotek.Data.Ini
 {
   public enum IniTokenType
   {
