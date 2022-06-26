@@ -1,8 +1,5 @@
-﻿using Cyotek.Ini;
+﻿
 using Cyotek.Testing;
-using NUnit.Framework;
-using System;
-using System.IO;
 
 namespace Cyotek.Data.Ini.Tests
 {
@@ -72,7 +69,7 @@ this is a bad value";
       target = new IniDocument(this.GetDataFileName("settings.ini"));
 
       // assert
-      this.CompareDocuments(target, this.GetSampleDocument());
+      IniDocumentAssert.AreEqual(target, this.GetSampleDocument());
     }
 
     [Test]
@@ -97,7 +94,6 @@ this is a bad value";
     }
 
     [Test]
-    [ExpectedException(typeof(ArgumentNullException), ExpectedMessage = "Value cannot be null.\r\nParameter name: sectionName")]
     public void CreateSectionNullExceptionTest()
     {
       // arrange
@@ -105,10 +101,8 @@ this is a bad value";
 
       target = new IniDocument();
 
-      // act
-      target.CreateSection(null);
-
-      // assert
+      // act & assert
+      Assert.Throws<ArgumentNullException>(() => target.CreateSection(null));
     }
 
     [Test]
@@ -133,7 +127,6 @@ this is a bad value";
     }
 
     [Test]
-    [ExpectedException(typeof(ArgumentNullException), ExpectedMessage = "Value cannot be null.\r\nParameter name: sectionName")]
     public void DeleteSectionInvalidNullSectionNameExceptionTest()
     {
       // arrange
@@ -141,10 +134,8 @@ this is a bad value";
 
       target = new IniDocument();
 
-      // act
-      target.DeleteSection(null);
-
-      // assert
+      // act & assert
+      Assert.Throws<ArgumentNullException>(() => target.DeleteSection(null));
     }
 
     [Test]
@@ -187,7 +178,6 @@ this is a bad value";
     }
 
     [Test]
-    [ExpectedException(typeof(ArgumentNullException), ExpectedMessage = "Value cannot be null.\r\nParameter name: sectionName")]
     public void DeleteValueInvalidNullSectionNameExceptionTest()
     {
       // arrange
@@ -197,14 +187,11 @@ this is a bad value";
       target = new IniDocument();
       expectedValueName = "Value";
 
-      // act
-      target.DeleteValue(null, expectedValueName);
-
-      // assert
+      // act & assert
+      Assert.Throws<ArgumentNullException>(() => target.DeleteValue(null, expectedValueName));
     }
 
     [Test]
-    [ExpectedException(typeof(ArgumentNullException), ExpectedMessage = "Value cannot be null.\r\nParameter name: valueName")]
     public void DeleteValueInvalidNullValueNameExceptionTest()
     {
       // arrange
@@ -214,10 +201,8 @@ this is a bad value";
       target = new IniDocument();
       expectedSectionName = "Value";
 
-      // act
-      target.DeleteValue(expectedSectionName, null);
-
-      // assert
+      // act & assert
+      Assert.Throws<ArgumentNullException>(() => target.DeleteValue(expectedSectionName, null));
     }
 
     [Test]
@@ -291,7 +276,6 @@ this is a bad value";
     }
 
     [Test]
-    [ExpectedException(typeof(InvalidDataException), ExpectedMessage = "A token named 'Section' already exists, but is not a section token.")]
     public void GetSectionInvalidSectionExceptionTest()
     {
       // arrange
@@ -305,14 +289,13 @@ this is a bad value";
 
       target.ChildTokens.Add(new IniValueToken(expectedSectionName, expectedValue));
 
-      // act
-      target.GetSection(expectedSectionName);
+      // TODO: Check this makes sense
 
-      // assert
+      // act & assert
+      Assert.Throws<InvalidDataException>(() => target.GetSection(expectedSectionName));
     }
 
     [Test]
-    [ExpectedException(typeof(ArgumentNullException), ExpectedMessage = "Value cannot be null.\r\nParameter name: sectionName")]
     public void GetSectionNullExceptionTest()
     {
       // arrange
@@ -320,10 +303,8 @@ this is a bad value";
 
       target = new IniDocument();
 
-      // act
-      target.GetSection(null);
-
-      // assert
+      // act & assert
+      Assert.Throws<ArgumentNullException>(() => target.GetSection(null));
     }
 
     [Test]
@@ -340,7 +321,7 @@ this is a bad value";
       target.LoadIni(SampleIni);
 
       // assert
-      this.CompareDocuments(expected, target);
+      IniDocumentAssert.AreEqual(expected, target);
     }
 
     [Test]
@@ -362,7 +343,7 @@ this is a bad value";
       }
 
       // assert
-      this.CompareDocuments(expected, target);
+      IniDocumentAssert.AreEqual(expected, target);
     }
 
     [Test]
@@ -381,7 +362,7 @@ this is a bad value";
       target.Load(fileName);
 
       // assert
-      this.CompareDocuments(expected, target);
+      IniDocumentAssert.AreEqual(expected, target);
     }
 
     [Test]
@@ -474,35 +455,29 @@ epsilon";
         actual = new IniDocument();
         actual.Load(workFile.FileName);
         Assert.IsTrue((File.GetAttributes(workFile.FileName) & FileAttributes.Hidden) != 0);
-        this.CompareDocuments(target, actual);
+        IniDocumentAssert.AreEqual(target, actual);
       }
     }
 
     [Test]
     public void SaveTest()
     {
-      // arrange
-      string workFile;
-      IniDocument target;
-      IniDocument actual;
-
-      workFile = this.GetWorkFile();
-      target = this.GetSampleDocument();
-
-      // act
-      try
+      using (TemporaryFile workFile = new TemporaryFile())
       {
-        target.Save(workFile);
-      }
-      finally
-      {
+        // arrange
+        IniDocument target;
+        IniDocument actual;
+
+        target = this.GetSampleDocument();
+
+        // act
+        target.Save(workFile.FileName);
+
+        // assert
         actual = new IniDocument();
-        actual.Load(workFile);
-        this.DeleteFile(workFile);
+        actual.Load(workFile.FileName);
+        IniDocumentAssert.AreEqual(target, actual);
       }
-
-      // assert
-      this.CompareDocuments(target, actual);
     }
 
     [Test]
@@ -549,7 +524,6 @@ gif";
     }
 
     [Test]
-    [ExpectedException(typeof(ArgumentNullException), ExpectedMessage = "Value cannot be null.\r\nParameter name: name")]
     public void SetValueInvalidNullValueNameExceptionTest()
     {
       // arrange
@@ -561,14 +535,11 @@ gif";
       expectedSectionName = "Value";
       expectedValue = this.GetRandomString();
 
-      // act
-      target.SetValue(expectedSectionName, null, expectedValue);
-
-      // assert
+      // act & assert
+      Assert.Throws<ArgumentNullException>(() => target.SetValue(expectedSectionName, null, expectedValue));
     }
 
     [Test]
-    [ExpectedException(typeof(InvalidDataException), ExpectedMessage = "A token named 'Value' already exists, but is not a value token.")]
     public void SetValueInvalidValueExceptionTest()
     {
       // arrange
@@ -588,43 +559,38 @@ gif";
 
       sectionToken.ChildTokens.Add(new IniSectionToken(expectedValueName));
 
-      // act
-      target.SetValue(expectedSectionName, expectedValueName, expectedValue);
+      // TODO: Check this makes sese
 
-      // assert
+      // act & assert
+      Assert.Throws<InvalidDataException>(() => target.SetValue(expectedSectionName, expectedValueName, expectedValue));
     }
 
     [Test]
     public void SetValueStaticTest()
     {
-      // arrange
-      string fileName;
-      string expectedSectionName;
-      string expectedValueName;
-      string expectedValue;
-      IniDocument expected;
-
-      fileName = this.GetWorkFile();
-      expectedSectionName = this.GetRandomString();
-      expectedValueName = this.GetRandomString();
-      expectedValue = this.GetRandomString();
-
-      // act
-      try
+      using (TemporaryFile workFile = new TemporaryFile())
       {
-        IniDocument.SetValue(fileName, expectedSectionName, expectedValueName, expectedValue);
-      }
-      finally
-      {
-        expected = new IniDocument(fileName);
-        expected.Load();
-        this.DeleteFile(fileName);
-      }
+        // arrange
+        string fileName;
+        string expectedSectionName;
+        string expectedValueName;
+        string expectedValue;
+        IniDocument actual;
 
-      // assert
-      Assert.AreNotEqual(_expectedMissingIndex, expected.ChildTokens.IndexOf(expectedSectionName));
-      Assert.AreNotEqual(_expectedMissingIndex, expected.ChildTokens[expectedSectionName].ChildTokens.IndexOf(expectedValueName));
-      Assert.AreEqual(expectedValue, expected.ChildTokens[expectedSectionName].ChildTokens[expectedValueName].Value);
+        expectedSectionName = this.GetRandomString();
+        expectedValueName = this.GetRandomString();
+        expectedValue = this.GetRandomString();
+
+        // act
+        IniDocument.SetValue(workFile.FileName, expectedSectionName, expectedValueName, expectedValue);
+
+        // assert
+        actual = new IniDocument(workFile.FileName);
+        actual.Load();
+        Assert.AreNotEqual(_expectedMissingIndex, actual.ChildTokens.IndexOf(expectedSectionName));
+        Assert.AreNotEqual(_expectedMissingIndex, actual.ChildTokens[expectedSectionName].ChildTokens.IndexOf(expectedValueName));
+        Assert.AreEqual(expectedValue, actual.ChildTokens[expectedSectionName].ChildTokens[expectedValueName].Value);
+      }
     }
 
     [Test]
@@ -721,10 +687,7 @@ Value1=Three";
 
     #region Protected Methods
 
-    protected void CompareDocuments(IniDocument expected, IniDocument actual)
-    {
-      CyoAssert.AreEqual(expected, actual, "Ini", "FileName");
-    }
+   
 
     protected IniDocument GetSampleDocument()
     {

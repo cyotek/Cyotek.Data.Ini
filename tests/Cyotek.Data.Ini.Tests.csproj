@@ -16,4 +16,14 @@
     <PackageReference Include="coverlet.collector" Version="3.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\src\Cyotek.Data.Ini.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="data\settings.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
