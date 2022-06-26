@@ -1,9 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <!--Build-->
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <TargetFrameworks>net6.0;net48;net472;net462</TargetFrameworks>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <!--<Nullable Condition="'$(TargetFramework)' == 'net6.0'">enable</Nullable>-->
   </PropertyGroup>
+
+  <!--Documentation-->
+  <PropertyGroup>
+    <!--<GenerateDocumentationFile>True</GenerateDocumentationFile>-->
+  </PropertyGroup>
+
+  <!--Strong Name -->
+  <PropertyGroup>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\res\Cyotek.Data.Ini.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\res\Cyotek.Data.Ini.snk" Link="Cyotek.Data.Ini.snk" />
+  </ItemGroup>
 
 </Project>

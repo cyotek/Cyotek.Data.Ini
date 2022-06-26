@@ -1,5 +1,8 @@
 ﻿
 using Cyotek.Testing;
+using NUnit.Framework;
+using System;
+using System.IO;
 
 namespace Cyotek.Data.Ini.Tests
 {

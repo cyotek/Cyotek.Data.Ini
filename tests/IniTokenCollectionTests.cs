@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using NUnit.Framework;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace Cyotek.Data.Ini.Tests
 {

@@ -1,4 +1,6 @@
 ﻿
+using NUnit.Framework;
+
 namespace Cyotek.Data.Ini.Tests
 {
   [TestFixture]

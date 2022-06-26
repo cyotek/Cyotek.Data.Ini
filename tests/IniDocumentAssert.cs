@@ -1,4 +1,6 @@
-﻿namespace Cyotek.Data.Ini.Tests
+﻿using NUnit.Framework;
+
+namespace Cyotek.Data.Ini.Tests
 {
   internal static class IniDocumentAssert
   {

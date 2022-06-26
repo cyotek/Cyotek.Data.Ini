@@ -1,4 +1,8 @@
-﻿namespace Cyotek.Data.Ini.Tests
+﻿using NUnit.Framework;
+using System;
+using System.IO;
+
+namespace Cyotek.Data.Ini.Tests
 {
   public abstract class TestBase
   {
