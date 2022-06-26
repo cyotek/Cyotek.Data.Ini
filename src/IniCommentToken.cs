@@ -49,7 +49,7 @@ namespace Cyotek.Data.Ini
       if (!this.Value.StartsWithAny(IniDocument.DefaultCommentCharacters))
       {
         writer.Write(IniDocument.DefaultCommentCharacters[0]);
-        writer.Write(Characters.Space);
+        writer.Write(' ');
       }
 
       writer.WriteLine(this.Value);
