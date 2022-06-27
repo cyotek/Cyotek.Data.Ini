@@ -7,7 +7,7 @@ namespace Cyotek.Data.Ini.Tests
   {
     #region Protected Properties
 
-    protected string DataDirectory => Path.Combine(TestContext.CurrentContext.WorkDirectory, "data");
+    protected string DataDirectory => Path.Combine(TestContext.CurrentContext.TestDirectory, "data");
 
     #endregion Protected Properties
 

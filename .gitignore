@@ -2,6 +2,7 @@
 bin/
 obj/
 _NCrunch_*/
+testresults/
 
 *.suo
 *.user
