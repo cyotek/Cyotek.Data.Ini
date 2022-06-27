@@ -46,7 +46,11 @@ namespace Cyotek.Data.Ini
       get { return _value; }
       set
       {
-        if (!string.IsNullOrEmpty(value) && !string.IsNullOrWhiteSpace(value))
+#if NET452_OR_GREATER || NETSTANDARD || NET
+        if (!string.IsNullOrWhiteSpace(value))
+#else
+        if (value != null && !string.IsNullOrEmpty(value.Trim()))
+#endif
         {
           throw new ArgumentException("Value can only contain whitespace characters.", nameof(value));
         }

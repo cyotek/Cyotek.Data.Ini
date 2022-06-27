@@ -433,10 +433,17 @@ namespace Cyotek.Data.Ini
     {
       IniTokenType result;
 
-      if (string.IsNullOrEmpty(line) || string.IsNullOrWhiteSpace(line))
+#if NET452_OR_GREATER || NETSTANDARD || NET
+      if (string.IsNullOrWhiteSpace(line))
       {
         result = IniTokenType.Whitespace;
       }
+#else
+      if (string.IsNullOrEmpty(line) || line.TrimWhitespace().Length == 0)
+      {
+        result = IniTokenType.Whitespace;
+      }
+#endif
       else
       {
         string trimmedLine;
@@ -464,6 +471,6 @@ namespace Cyotek.Data.Ini
       return result;
     }
 
-    #endregion Private Methods
+#endregion Private Methods
   }
 }

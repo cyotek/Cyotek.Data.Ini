@@ -7,24 +7,26 @@ namespace Cyotek.Data.Ini
 {
   public class IniTokenCollection
     : IList<IniToken>, IList
+#if NET452_OR_GREATER || NETSTANDARD || NET
       , IReadOnlyList<IniToken>
+#endif
   {
-    #region Constants
+#region Constants
 
     private readonly IList<IniToken> _items;
 
 
 
 
-    #endregion
+#endregion
 
-    #region Fields
+#region Fields
 
 
 
-    #endregion
+#endregion
 
-    #region Constructors
+#region Constructors
 
     public IniTokenCollection()
     {
@@ -39,14 +41,14 @@ namespace Cyotek.Data.Ini
       this.AddRange(items);
     }
 
-    #endregion
+#endregion
 
-    #region Events
+#region Events
 
 
-    #endregion
+#endregion
 
-    #region Properties
+#region Properties
 
 
     protected IList<IniToken> Items
@@ -54,9 +56,9 @@ namespace Cyotek.Data.Ini
       get { return _items; }
     }
 
-    #endregion
+#endregion
 
-    #region Methods
+#region Methods
 
 
 
@@ -219,9 +221,9 @@ namespace Cyotek.Data.Ini
       _items[index] = item;
     }
 
-    #endregion
+#endregion
 
-    #region IList<IniToken> Interface
+#region IList<IniToken> Interface
 
     public IniToken this[int index]
     {
@@ -363,10 +365,10 @@ namespace Cyotek.Data.Ini
       get { return _items.IsReadOnly; }
     }
 
-    #endregion
+#endregion
 
 
-    #region IList & ICollection
+#region IList & ICollection
 
     int IList.Add(object value)
     {
@@ -456,23 +458,23 @@ namespace Cyotek.Data.Ini
       }
     }
 
-    #endregion
-    #region Fields
+#endregion
+#region Fields
 
     private IDictionary<string, int> _nameToIndexLookup;
 
-    #endregion
+#endregion
 
-    #region Properties
+#region Properties
 
     public IniToken this[string name]
     {
       get { return this[this.IndexOf(name)]; }
     }
 
-    #endregion
+#endregion
 
-    #region Methods
+#region Methods
 
     public int IndexOf(string name)
     {
@@ -533,6 +535,6 @@ namespace Cyotek.Data.Ini
  
     
 
-    #endregion
+#endregion
   }
 }
