@@ -3,6 +3,8 @@ bin/
 obj/
 _NCrunch_*/
 testresults/
+dist/
 
 *.suo
 *.user
+*.pdn
