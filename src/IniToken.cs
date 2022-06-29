@@ -10,10 +10,7 @@ namespace Cyotek.Data.Ini
 
     public virtual IniTokenCollection ChildTokens { get; protected set; }
 
-    public string InnerText
-    {
-      get { return this.ToString(); }
-    }
+    public string InnerText => this.ToString();
 
     public virtual string Name { get; set; }
 

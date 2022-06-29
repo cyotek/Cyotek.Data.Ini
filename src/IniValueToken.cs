@@ -21,10 +21,7 @@ namespace Cyotek.Data.Ini
 
     #region Properties
 
-    public override IniTokenType Type
-    {
-      get { return IniTokenType.Value; }
-    }
+    public override IniTokenType Type => IniTokenType.Value;
 
     #endregion
 

@@ -26,14 +26,11 @@ namespace Cyotek.Data.Ini
     [EditorBrowsable(EditorBrowsableState.Never)]
     public override string Name
     {
-      get { return base.Name; }
-      set { throw new NotSupportedException(); }
+      get => base.Name;
+      set => throw new NotSupportedException();
     }
 
-    public override IniTokenType Type
-    {
-      get { return IniTokenType.Raw; }
-    }
+    public override IniTokenType Type => IniTokenType.Raw;
 
     #endregion
 

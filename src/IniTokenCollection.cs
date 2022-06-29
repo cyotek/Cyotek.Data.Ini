@@ -10,22 +10,15 @@ namespace Cyotek.Data.Ini
       , IReadOnlyList<IniToken>
 #endif
   {
-#region Constants
+    #region Private Fields
 
     private readonly IList<IniToken> _items;
 
+    private readonly IDictionary<string, int> _nameToIndexLookup;
 
+    #endregion Private Fields
 
-
-#endregion
-
-#region Fields
-
-
-
-#endregion
-
-#region Constructors
+    #region Public Constructors
 
     public IniTokenCollection()
     {
@@ -33,33 +26,96 @@ namespace Cyotek.Data.Ini
       _nameToIndexLookup = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
     }
 
-
     public IniTokenCollection(IEnumerable<IniToken> items)
       : this()
     {
       this.AddRange(items);
     }
 
-#endregion
+    #endregion Public Constructors
 
-#region Events
+    #region Public Properties
 
+    public int Count => _items.Count;
 
-#endregion
+    public bool IsReadOnly => _items.IsReadOnly;
 
-#region Properties
+    bool IList.IsFixedSize => false;
 
+    bool ICollection.IsSynchronized => false;
 
-    protected IList<IniToken> Items
+    object ICollection.SyncRoot => this;
+
+    #endregion Public Properties
+
+    #region Protected Properties
+
+    protected IList<IniToken> Items => _items;
+
+    #endregion Protected Properties
+
+    #region Public Indexers
+
+    public IniToken this[int index]
     {
-      get { return _items; }
+      get => _items[index];
+      set
+      {
+        if (value == null)
+        {
+          throw new ArgumentNullException(nameof(value));
+        }
+
+        if (_items.IsReadOnly)
+        {
+          throw new NotSupportedException("Collection is read-only.");
+        }
+
+        if (index < 0 || index >= _items.Count)
+        {
+          throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out of range. Must be non-negative and less than the size of the collection.");
+        }
+
+        this.SetItem(index, value);
+      }
     }
 
-#endregion
+    public IniToken this[string name] => this[this.IndexOf(name)];
 
-#region Methods
+    object IList.this[int index]
+    {
+      get => this[index];
+      set
+      {
+        if (value is IniToken item)
+        {
+          this[index] = item;
+        }
+        else
+        {
+          throw new ArgumentException("Value must be of type IniToken.", nameof(value));
+        }
+      }
+    }
 
+    #endregion Public Indexers
 
+    #region Public Methods
+
+    public void Add(IniToken item)
+    {
+      if (_items.IsReadOnly)
+      {
+        throw new NotSupportedException("Collection is read-only.");
+      }
+
+      if (item == null)
+      {
+        throw new ArgumentNullException(nameof(item));
+      }
+
+      this.InsertItem(_items.Count, item);
+    }
 
     public void AddRange(IEnumerable<IniToken> collection)
     {
@@ -69,6 +125,88 @@ namespace Cyotek.Data.Ini
       }
     }
 
+    public void Clear()
+    {
+      if (_items.IsReadOnly)
+      {
+        throw new NotSupportedException("Collection is read-only.");
+      }
+
+      this.ClearItems();
+    }
+
+    public bool Contains(IniToken item)
+    {
+      return _items.Contains(item);
+    }
+
+    public void CopyTo(IniToken[] array, int index)
+    {
+      _items.CopyTo(array, index);
+    }
+
+    public IEnumerator<IniToken> GetEnumerator()
+    {
+      return _items.GetEnumerator();
+    }
+
+    public int IndexOf(IniToken item)
+    {
+      return _items.IndexOf(item);
+    }
+
+    public int IndexOf(string name)
+    {
+      int index;
+
+      if (name != null)
+      {
+        if (!_nameToIndexLookup.TryGetValue(name, out index) || index < 0 || index > this.Count - 1 || !string.Equals(this[index].Name, name, StringComparison.OrdinalIgnoreCase))
+        {
+          // missing index, or not found, out of bounds, etc
+          index = -1;
+
+          _nameToIndexLookup.Remove(name);
+
+          for (int i = 0; i < this.Count; i++)
+          {
+            if (string.Equals(this[i].Name, name, StringComparison.OrdinalIgnoreCase))
+            {
+              _nameToIndexLookup.Add(name, i);
+              index = i;
+              break;
+            }
+          }
+        }
+      }
+      else
+      {
+        index = -1;
+      }
+
+      return index;
+    }
+
+    public void Insert(int index, IniToken item)
+    {
+      if (item == null)
+      {
+        throw new ArgumentNullException(nameof(item));
+      }
+
+      if (_items.IsReadOnly)
+      {
+        throw new NotSupportedException("Collection is read-only.");
+      }
+
+      if (index < 0 || index > _items.Count)
+      {
+        throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out of range. Must be non-negative and less than the size of the collection.");
+      }
+
+      this.InsertItem(index, item);
+    }
+
     public void InsertRange(int index, IEnumerable<IniToken> collection)
     {
       foreach (IniToken value in collection)
@@ -76,6 +214,55 @@ namespace Cyotek.Data.Ini
         this.Insert(index, value);
         index++;
       }
+    }
+
+    public bool Remove(IniToken item)
+    {
+      bool result;
+      int index;
+
+      if (_items.IsReadOnly)
+      {
+        throw new NotSupportedException("Collection is read-only.");
+      }
+
+      index = _items.IndexOf(item);
+      result = index != -1;
+
+      if (result)
+      {
+        this.RemoveItem(index);
+      }
+
+      return result;
+    }
+
+    public bool Remove(string name)
+    {
+      int index;
+
+      index = this.IndexOf(name);
+      if (index != -1)
+      {
+        this.RemoveAt(index);
+      }
+
+      return index != -1;
+    }
+
+    public void RemoveAt(int index)
+    {
+      if (_items.IsReadOnly)
+      {
+        throw new NotSupportedException("Collection is read-only.");
+      }
+
+      if (index < 0 || index >= _items.Count)
+      {
+        throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out of range. Must be non-negative and less than the size of the collection.");
+      }
+
+      this.RemoveItem(index);
     }
 
     public void RemoveRange(IEnumerable<IniToken> collection)
@@ -177,6 +364,82 @@ namespace Cyotek.Data.Ini
       }
     }
 
+    public bool TryGetValue(string name, out IniToken value)
+    {
+      int index;
+
+      index = this.IndexOf(name);
+      value = index != -1 ? _items[index] : null;
+
+      return index != -1;
+    }
+
+    int IList.Add(object value)
+    {
+      if (value is IniToken item)
+      {
+        this.Add(item);
+        return this.IndexOf(item);
+      }
+      else
+      {
+        throw new ArgumentException("Value must be of type IniToken.", nameof(value));
+      }
+    }
+
+    bool IList.Contains(object value)
+    {
+      return value is IniToken item && this.Contains(item);
+    }
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+      for (int i = 0; i < _items.Count; i++)
+      {
+        array.SetValue(_items[i], index + i);
+      }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return _items.GetEnumerator();
+    }
+
+    int IList.IndexOf(object value)
+    {
+      return value is IniToken item
+        ? this.IndexOf(item)
+        : -1;
+    }
+
+    void IList.Insert(int index, object value)
+    {
+      if (value is IniToken item)
+      {
+        this.Insert(index, item);
+      }
+      else
+      {
+        throw new ArgumentException("Value must be of type IniToken.", nameof(value));
+      }
+    }
+
+    void IList.Remove(object value)
+    {
+      if (value is IniToken item)
+      {
+        this.Remove(item);
+      }
+      else
+      {
+        throw new ArgumentException("Value must be of type IniToken.", nameof(value));
+      }
+    }
+
+    #endregion Public Methods
+
+    #region Protected Methods
+
     protected virtual void ClearItems()
     {
       _nameToIndexLookup.Clear();
@@ -221,320 +484,6 @@ namespace Cyotek.Data.Ini
       _items[index] = item;
     }
 
-#endregion
-
-#region IList<IniToken> Interface
-
-    public IniToken this[int index]
-    {
-      get { return _items[index]; }
-      set
-      {
-        if (value == null)
-        {
-          throw new ArgumentNullException(nameof(value));
-        }
-
-        if (_items.IsReadOnly)
-        {
-          throw new NotSupportedException("Collection is read-only.");
-        }
-
-        if (index < 0 || index >= _items.Count)
-        {
-          throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out of range. Must be non-negative and less than the size of the collection.");
-        }
-
-        this.SetItem(index, value);
-      }
-    }
-
-    public void Add(IniToken item)
-    {
-      if (_items.IsReadOnly)
-      {
-        throw new NotSupportedException("Collection is read-only.");
-      }
-
-      if (item == null)
-      {
-        throw new ArgumentNullException(nameof(item));
-      }
-
-      this.InsertItem(_items.Count, item);
-    }
-
-    public void Clear()
-    {
-      if (_items.IsReadOnly)
-      {
-        throw new NotSupportedException("Collection is read-only.");
-      }
-
-      this.ClearItems();
-    }
-
-    public bool Contains(IniToken item)
-    {
-      return _items.Contains(item);
-    }
-
-    public void CopyTo(IniToken[] array, int index)
-    {
-      _items.CopyTo(array, index);
-    }
-
-    public IEnumerator<IniToken> GetEnumerator()
-    {
-      return _items.GetEnumerator();
-    }
-
-    public int IndexOf(IniToken item)
-    {
-      return _items.IndexOf(item);
-    }
-
-    public void Insert(int index, IniToken item)
-    {
-      if (item == null)
-      {
-        throw new ArgumentNullException(nameof(item));
-      }
-
-      if (_items.IsReadOnly)
-      {
-        throw new NotSupportedException("Collection is read-only.");
-      }
-
-      if (index < 0 || index > _items.Count)
-      {
-        throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out of range. Must be non-negative and less than the size of the collection.");
-      }
-
-      this.InsertItem(index, item);
-    }
-
-    public bool Remove(IniToken item)
-    {
-      bool result;
-      int index;
-
-      if (_items.IsReadOnly)
-      {
-        throw new NotSupportedException("Collection is read-only.");
-      }
-
-      index = _items.IndexOf(item);
-      result = index != -1;
-
-      if (result)
-      {
-        this.RemoveItem(index);
-      }
-
-      return result;
-    }
-
-    public void RemoveAt(int index)
-    {
-      if (_items.IsReadOnly)
-      {
-        throw new NotSupportedException("Collection is read-only.");
-      }
-
-      if (index < 0 || index >= _items.Count)
-      {
-        throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out of range. Must be non-negative and less than the size of the collection.");
-      }
-
-      this.RemoveItem(index);
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-      return _items.GetEnumerator();
-    }
-
-    public int Count
-    {
-      get { return _items.Count; }
-    }
-
-    public bool IsReadOnly
-    {
-      get { return _items.IsReadOnly; }
-    }
-
-#endregion
-
-
-#region IList & ICollection
-
-    int IList.Add(object value)
-    {
-      if (value is IniToken item)
-      {
-        this.Add(item);
-        return this.IndexOf(item);
-      }
-      else
-      {
-        throw new ArgumentException("Value must be of type IniToken.", nameof(value));
-      }
-    }
-
-    bool IList.Contains(object value)
-    {
-      return value is IniToken item && this.Contains(item);
-    }
-
-    int IList.IndexOf(object value)
-    {
-      return value is IniToken item
-        ? this.IndexOf(item)
-        : -1;
-    }
-
-    void IList.Insert(int index, object value)
-    {
-      if (value is IniToken item)
-      {
-        this.Insert(index, item);
-      }
-      else
-      {
-        throw new ArgumentException("Value must be of type IniToken.", nameof(value));
-      }
-    }
-
-    void IList.Remove(object value)
-    {
-      if (value is IniToken item)
-      {
-        this.Remove(item);
-      }
-      else
-      {
-        throw new ArgumentException("Value must be of type IniToken.", nameof(value));
-      }
-    }
-
-    void ICollection.CopyTo(Array array, int index)
-    {
-      for (int i = 0; i < _items.Count; i++)
-      {
-        array.SetValue(_items[i], index + i);
-      }
-    }
-
-    bool IList.IsFixedSize
-    {
-      get { return false; }
-    }
-
-    object ICollection.SyncRoot
-    {
-      get { return this; }
-    }
-
-    bool ICollection.IsSynchronized
-    {
-      get { return false; }
-    }
-
-    object IList.this[int index]
-    {
-      get { return this[index]; }
-      set
-      {
-        if (value is IniToken item)
-        {
-          this[index] = item;
-        }
-        else
-        {
-          throw new ArgumentException("Value must be of type IniToken.", nameof(value));
-        }
-      }
-    }
-
-#endregion
-#region Fields
-
-    private IDictionary<string, int> _nameToIndexLookup;
-
-#endregion
-
-#region Properties
-
-    public IniToken this[string name]
-    {
-      get { return this[this.IndexOf(name)]; }
-    }
-
-#endregion
-
-#region Methods
-
-    public int IndexOf(string name)
-    {
-      int index;
-
-      if (name != null)
-      {
-        if (!_nameToIndexLookup.TryGetValue(name, out index) || index < 0 || index > this.Count - 1 || !string.Equals(this[index].Name, name, StringComparison.OrdinalIgnoreCase))
-        {
-          // missing index, or not found, out of bounds, etc
-          index = -1;
-
-          _nameToIndexLookup.Remove(name);
-
-          for (int i = 0; i < this.Count; i++)
-          {
-            if (string.Equals(this[i].Name, name, StringComparison.OrdinalIgnoreCase))
-            {
-              _nameToIndexLookup.Add(name, i);
-              index = i;
-              break;
-            }
-          }
-        }
-      }
-      else
-      {
-        index = -1;
-      }
-
-      return index;
-    }
-
-    public bool Remove(string name)
-    {
-      int index;
-
-      index = this.IndexOf(name);
-      if (index != -1)
-      {
-        this.RemoveAt(index);
-      }
-
-      return index != -1;
-    }
-
-    public bool TryGetValue(string name, out IniToken value)
-    {
-      int index;
-
-      index = this.IndexOf(name);
-      value = index != -1 ? _items[index] : null;
-
-      return index != -1;
-    }
-
-    
- 
-    
-
-#endregion
+    #endregion Protected Methods
   }
 }

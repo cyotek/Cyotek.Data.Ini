@@ -24,17 +24,14 @@ namespace Cyotek.Data.Ini
 
     #region Properties
 
-    public override IniTokenType Type
-    {
-      get { return IniTokenType.Section; }
-    }
+    public override IniTokenType Type => IniTokenType.Section;
 
     [Browsable(false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
     public override string Value
     {
-      get { return base.Value; }
-      set { throw new NotSupportedException(); }
+      get => base.Value;
+      set => throw new NotSupportedException();
     }
 
     #endregion

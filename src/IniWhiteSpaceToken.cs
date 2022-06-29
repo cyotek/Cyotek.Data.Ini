@@ -32,18 +32,15 @@ namespace Cyotek.Data.Ini
     [EditorBrowsable(EditorBrowsableState.Never)]
     public override string Name
     {
-      get { return base.Name; }
-      set { throw new NotSupportedException(); }
+      get => base.Name;
+      set => throw new NotSupportedException();
     }
 
-    public override IniTokenType Type
-    {
-      get { return IniTokenType.Whitespace; }
-    }
+    public override IniTokenType Type => IniTokenType.Whitespace;
 
     public override string Value
     {
-      get { return _value; }
+      get => _value;
       set
       {
 #if NET452_OR_GREATER || NETSTANDARD || NET

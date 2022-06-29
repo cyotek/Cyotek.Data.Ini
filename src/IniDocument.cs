@@ -58,22 +58,16 @@ namespace Cyotek.Data.Ini
 
         return base.ChildTokens;
       }
-      protected set
-      {
-        base.ChildTokens = value;
-      }
+      protected set => base.ChildTokens = value;
     }
 
     public string FileName
     {
-      get { return _fileName; }
-      set { _fileName = value; }
+      get => _fileName;
+      set => _fileName = value;
     }
 
-    public override IniTokenType Type
-    {
-      get { return IniTokenType.Document; }
-    }
+    public override IniTokenType Type => IniTokenType.Document;
 
     #endregion Public Properties
 
