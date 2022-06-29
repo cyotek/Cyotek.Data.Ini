@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Cyotek.Data.Ini
 {
@@ -81,12 +80,13 @@ namespace Cyotek.Data.Ini
 
     public void RemoveRange(IEnumerable<IniToken> collection)
     {
-      IniToken[] itemsToRemove;
+      List<IniToken> itemsToRemove;
 
-      itemsToRemove = collection.ToArray();
-      foreach (IniToken item in itemsToRemove)
+      itemsToRemove = new List<IniToken>(collection);
+
+      for (int i = 0; i < itemsToRemove.Count; i++)
       {
-        this.Remove(item);
+        this.Remove(itemsToRemove[i]);
       }
     }
 
