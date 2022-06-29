@@ -13,7 +13,7 @@ namespace Cyotek.Data.Ini
 
       result = false;
 
-      if (!string.IsNullOrEmpty(text))
+      if (text != null && text.Length > 1 && anyOf.Length > 0)
       {
         char firstChar;
 
