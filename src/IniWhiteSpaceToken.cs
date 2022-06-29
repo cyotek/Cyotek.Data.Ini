@@ -43,7 +43,7 @@ namespace Cyotek.Data.Ini
       get => _value;
       set
       {
-#if NET452_OR_GREATER || NETSTANDARD || NET
+#if NET452_OR_GREATER || NETSTANDARD2_0_OR_GREATER || NET || NETCOREAPP
         if (!string.IsNullOrWhiteSpace(value))
 #else
         if (value != null && !string.IsNullOrEmpty(value.Trim()))

@@ -427,7 +427,7 @@ namespace Cyotek.Data.Ini
     {
       IniTokenType result;
 
-#if NET452_OR_GREATER || NETSTANDARD || NET
+#if NET452_OR_GREATER || NETSTANDARD2_0_OR_GREATER || NET || NETCOREAPP
       if (string.IsNullOrWhiteSpace(line))
       {
         result = IniTokenType.Whitespace;

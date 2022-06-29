@@ -6,7 +6,7 @@ namespace Cyotek.Data.Ini
 {
   public class IniTokenCollection
     : IList<IniToken>, IList
-#if NET452_OR_GREATER || NETSTANDARD || NET
+#if NET452_OR_GREATER || NETSTANDARD2_0_OR_GREATER || NET || NETCOREAPP
       , IReadOnlyList<IniToken>
 #endif
   {
