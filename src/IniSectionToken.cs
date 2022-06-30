@@ -42,7 +42,7 @@ namespace Cyotek.Data.Ini
     {
       IniSectionToken result;
 
-      result = new IniSectionToken();
+      result = new IniSectionToken(this.Name);
 
       foreach (IniToken token in this.ChildTokens)
       {
