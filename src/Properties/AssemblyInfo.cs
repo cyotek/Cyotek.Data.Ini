@@ -3,6 +3,17 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+// Cyotek Ini Reader / Writer Library
+// https://github.com/cyotek/Cyotek.Data.Ini
+
+// Copyright © 2014-2022 Cyotek Ltd.
+
+// This work is licensed under the MIT License.
+// See LICENSE.TXT for the full text
+
+// Found this code useful?
+// https://www.cyotek.com/contribute
+
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(true)]
 [assembly: Guid("5add1ebc-0931-4f96-b9fb-b50503ef5758")]
