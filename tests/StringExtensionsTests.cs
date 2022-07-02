@@ -53,6 +53,24 @@ namespace Cyotek.Data.Ini.Tests
       Assert.AreEqual(expected, actual);
     }
 
+    [TestCase(null, null, TestName = "{m}Null")]
+    [TestCase("", "", TestName = "{m}Empty")]
+    [TestCase("alpha", "alpha", TestName = "{m}")]
+    [TestCase("\talpha", "alpha", TestName = "{m}Leading")]
+    [TestCase("alpha\n", "alpha", TestName = "{m}Trailing")]
+    [TestCase("\r\nalpha  ", "alpha", TestName = "{m}Both")]
+    public void TrimWhitespaceTestCases(string value, string expected)
+    {
+      // arrange
+      string actual;
+
+      // act
+      actual = value.TrimWhitespace();
+
+      // assert
+      Assert.AreEqual(expected, actual);
+    }
+
     #endregion Public Methods
   }
 }
