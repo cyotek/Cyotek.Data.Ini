@@ -113,7 +113,7 @@ namespace Cyotek.Data.Ini
 
     public void Sort()
     {
-      this.Sort(Comparer<IniToken>.Default);
+      this.Sort(IniTokenComparer.Ordinal);
     }
 
     public void Sort(IComparer<IniToken> comparer)

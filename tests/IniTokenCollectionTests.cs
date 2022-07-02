@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -7,6 +8,25 @@ namespace Cyotek.Data.Ini.Tests
   [TestFixture]
   internal class IniTokenCollectionTests : TestBase
   {
+    #region Private Properties
+
+    private static IniTokenCollection TestCollection => new IniTokenCollection
+    {
+      new IniValueToken("longTest", "9223372036854775807"),
+      new IniValueToken("shortTest", "32767"),
+      new IniValueToken("stringTest", "HELLO WORLD THIS IS A TEST STRING ÅÄÖ!"),
+      new IniValueToken("floatTest", "0.4982315"),
+      new IniValueToken("intTest", "2147483647"),
+      new IniValueToken("byteTest", "127"),
+      new IniValueToken("doubleTest", "0.493128713218231"),
+      new IniValueToken("colorTest", "Crimson"),
+      new IniValueToken("fontTest", "Arial,13,\"Italic, Strikeout\""),
+      new IniValueToken("enumTest", "Bold, Italic"),
+      new IniValueToken("blank", "")
+    };
+
+    #endregion Private Properties
+
     #region Public Methods
 
     public static IEnumerable<TestCaseData> TryGetValueTestCaseSource()
@@ -259,6 +279,159 @@ namespace Cyotek.Data.Ini.Tests
       // assert
       actual = lookup.ContainsKey("Gamma");
       Assert.IsFalse(actual);
+    }
+
+    [Test]
+    public void SortComparisonExceptionTest()
+    {
+      Assert.Throws<ArgumentNullException>(() => new IniTokenCollection().Sort((Comparison<IniToken>)null));
+    }
+
+    [Test]
+    public void SortComparisonTest()
+    {
+      // arrange
+      IniTokenCollection target;
+      IniTokenCollection expected;
+
+      target = IniTokenCollectionTests.TestCollection;
+
+      expected = new IniTokenCollection
+      {
+        new IniValueToken("stringTest", "HELLO WORLD THIS IS A TEST STRING ÅÄÖ!"),
+        new IniValueToken("shortTest", "32767"),
+        new IniValueToken("longTest", "9223372036854775807"),
+        new IniValueToken("intTest", "2147483647"),
+        new IniValueToken("fontTest", "Arial,13,\"Italic, Strikeout\""),
+        new IniValueToken("floatTest", "0.4982315"),
+        new IniValueToken("enumTest", "Bold, Italic"),
+        new IniValueToken("doubleTest", "0.493128713218231"),
+        new IniValueToken("colorTest", "Crimson"),
+        new IniValueToken("byteTest", "127"),
+        new IniValueToken("blank", "")
+      };
+
+      // act
+      target.Sort((x, y) => -string.Compare(x.Name, y.Name));
+
+      // assert
+      IniDocumentAssert.AreEqual(expected, target);
+    }
+
+    [Test]
+    public void SortExceptionTest()
+    {
+      Assert.Throws<ArgumentNullException>(() => new IniTokenCollection().Sort((IComparer<IniToken>)null));
+    }
+
+    [Test]
+    public void SortIndexExceptionTest()
+    {
+      // arrange
+      string expected;
+      Exception actual;
+
+      expected = "Index cannot be less than zero. (Parameter 'index')";
+
+      // act
+      actual = Assert.Throws<ArgumentException>(() => new IniTokenCollection().Sort(-1, 1, IniTokenComparer.Ordinal));
+
+      // assert
+      Assert.AreEqual(expected, actual.Message);
+    }
+
+    [Test]
+    public void SortMaximumCountExceptionTest()
+    {
+      // arrange
+      string expected;
+      Exception actual;
+
+      expected = "Invalid count.";
+
+      // act
+      actual = Assert.Throws<ArgumentException>(() => new IniTokenCollection().Sort(0, 100, IniTokenComparer.Ordinal));
+
+      // assert
+      Assert.AreEqual(expected, actual.Message);
+    }
+
+    [Test]
+    public void SortMinimumCountExceptionTest()
+    {
+      // arrange
+      string expected;
+      Exception actual;
+
+      expected = "Count cannot be less than zero. (Parameter 'count')";
+
+      // act
+      actual = Assert.Throws<ArgumentException>(() => new IniTokenCollection().Sort(0, -1, IniTokenComparer.Ordinal));
+
+      // assert
+      Assert.AreEqual(expected, actual.Message);
+    }
+
+    [Test]
+    public void SortParametersTest()
+    {
+      // arrange
+      IniTokenCollection target;
+      IniTokenCollection expected;
+
+      target = IniTokenCollectionTests.TestCollection;
+
+      expected = new IniTokenCollection
+      {
+        new IniValueToken("longTest", "9223372036854775807"),
+        new IniValueToken("shortTest", "32767"),
+        new IniValueToken("byteTest", "127"),
+        new IniValueToken("colorTest", "Crimson"),
+        new IniValueToken("doubleTest", "0.493128713218231"),
+        new IniValueToken("floatTest", "0.4982315"),
+        new IniValueToken("fontTest", "Arial,13,\"Italic, Strikeout\""),
+        new IniValueToken("intTest", "2147483647"),
+        new IniValueToken("stringTest", "HELLO WORLD THIS IS A TEST STRING ÅÄÖ!"),
+        new IniValueToken("enumTest", "Bold, Italic"),
+        new IniValueToken("blank", "")
+      };
+
+      // act
+      target.Sort(2, 7, IniTokenComparer.Ordinal);
+
+      // assert
+      IniDocumentAssert.AreEqual(expected, target);
+    }
+
+    [Test]
+    public void SortTest()
+    {
+      // arrange
+      IniTokenCollection target;
+      IniTokenCollection expected;
+
+      target = IniTokenCollectionTests.TestCollection;
+
+      expected = new IniTokenCollection
+      {
+        new IniValueToken("blank", ""),
+        new IniValueToken("byteTest", "127"),
+        new IniValueToken("colorTest", "Crimson"),
+        new IniValueToken("doubleTest", "0.493128713218231"),
+        new IniValueToken("enumTest", "Bold, Italic"),
+        new IniValueToken("floatTest", "0.4982315"),
+        new IniValueToken("fontTest", "Arial,13,\"Italic, Strikeout\""),
+        new IniValueToken("intTest", "2147483647"),
+        new IniValueToken("longTest", "9223372036854775807"),
+        new IniValueToken("shortTest", "32767"),
+        new IniValueToken("stringTest", "HELLO WORLD THIS IS A TEST STRING ÅÄÖ!")
+      };
+
+      // act
+      target.Sort();
+
+      // assert
+      IniDocumentAssert.AreEqual(expected, target);
     }
 
     [Test]
