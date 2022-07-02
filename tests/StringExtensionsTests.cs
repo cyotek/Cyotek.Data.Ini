@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Cyotek.Data.Ini.Tests
 {
   [TestFixture]
-  public class StringExtensionsTests
+  internal class StringExtensionsTests
   {
     #region Public Methods
 

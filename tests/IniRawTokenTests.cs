@@ -3,15 +3,15 @@
 namespace Cyotek.Data.Ini.Tests
 {
   [TestFixture]
-  internal class IniCommentTokenTests : IniTokenTestBase<IniCommentToken>
+  internal class IniRawTokenTests : IniTokenTestBase<IniRawToken>
   {
     #region Protected Properties
 
-    protected override string ExpectedInnerText => "; alpha beta 2022";
+    protected override string ExpectedInnerText => "I am the very model of a modern Major-Gineral";
 
-    protected override IniTokenType ExpectedType => IniTokenType.Comment;
+    protected override IniTokenType ExpectedType => IniTokenType.Raw;
 
-    protected override IniCommentToken SampleToken => new IniCommentToken("alpha beta 2022");
+    protected override IniRawToken SampleToken => new IniRawToken("I am the very model of a modern Major-Gineral");
 
     #endregion Protected Properties
 
@@ -22,10 +22,10 @@ namespace Cyotek.Data.Ini.Tests
     public void ConstructorWithValueTestCases(string expected)
     {
       // arrange
-      IniCommentToken target;
+      IniRawToken target;
 
       // act
-      target = new IniCommentToken(expected);
+      target = new IniRawToken(expected);
 
       // assert
       Assert.IsNotNull(target);

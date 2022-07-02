@@ -25,10 +25,17 @@ namespace Cyotek.Data.Ini.Tests
 
     public static void AreEqual(IniToken expected, IniToken actual)
     {
-      Assert.AreEqual(expected.Type, actual.Type, nameof(IniToken.Type));
-      Assert.AreEqual(expected.Name, actual.Name, nameof(IniToken.Name));
-      Assert.AreEqual(expected.Value, actual.Value, nameof(IniToken.Value));
-      IniDocumentAssert.AreEqual(expected.ChildTokens, actual.ChildTokens);
+      if (expected != null && actual != null)
+      {
+        Assert.AreEqual(expected.Type, actual.Type, nameof(IniToken.Type));
+        Assert.AreEqual(expected.Name, actual.Name, nameof(IniToken.Name));
+        Assert.AreEqual(expected.Value, actual.Value, nameof(IniToken.Value));
+        IniDocumentAssert.AreEqual(expected.ChildTokens, actual.ChildTokens);
+      }
+      else
+      {
+        Assert.IsTrue(object.ReferenceEquals(expected, actual));
+      }
     }
 
     #endregion Public Methods

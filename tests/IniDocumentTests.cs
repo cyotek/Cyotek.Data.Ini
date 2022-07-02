@@ -47,6 +47,7 @@ this is a bad value";
 
     #endregion Private Fields
 
+
     #region Public Methods
 
     [Test]
@@ -525,49 +526,7 @@ gif";
       actual = writer.ToString();
       Assert.AreEqual(expected, actual);
     }
-
-    [Test]
-    public void SetValueInvalidNullValueNameExceptionTest()
-    {
-      // arrange
-      IniDocument target;
-      string expectedSectionName;
-      string expectedValue;
-
-      target = new IniDocument();
-      expectedSectionName = "Value";
-      expectedValue = "xi";
-
-      // act & assert
-      Assert.Throws<ArgumentNullException>(() => target.SetValue(expectedSectionName, null, expectedValue));
-    }
-
-    [Test]
-    public void SetValueInvalidValueExceptionTest()
-    {
-      // arrange
-      IniDocument target;
-      string expectedSectionName;
-      string expectedValueName;
-      string expectedValue;
-      IniSectionToken sectionToken;
-
-      target = new IniDocument();
-      expectedSectionName = "Section";
-      expectedValueName = "Value";
-      expectedValue = "omicron";
-
-      sectionToken = new IniSectionToken(expectedSectionName);
-      target.ChildTokens.Add(sectionToken);
-
-      sectionToken.ChildTokens.Add(new IniSectionToken(expectedValueName));
-
-      // TODO: Check this makes sese
-
-      // act & assert
-      Assert.Throws<InvalidDataException>(() => target.SetValue(expectedSectionName, expectedValueName, expectedValue));
-    }
-
+    
     [Test]
     public void SetValueStaticTest()
     {

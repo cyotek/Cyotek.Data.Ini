@@ -5,7 +5,7 @@ using System.Text;
 namespace Cyotek.Data.Ini.Tests
 {
   [TestFixture]
-  public class StringBuilderExtensionsTests
+  internal class StringBuilderExtensionsTests
   {
     #region Public Methods
 
