@@ -25,39 +25,13 @@ namespace Cyotek.Data.Ini.Tests
     [Test]
     public void CloneObjectTest()
     {
-      // arrange
-      object actual;
-      T expected;
-
-      expected = this.SampleToken;
-
-      // act
-      actual = ((ICloneable)expected).Clone();
-
-      // assert
-      Assert.IsNotNull(actual);
-      Assert.AreNotSame(expected, actual);
-      Assert.IsInstanceOf<T>(actual);
-      IniDocumentAssert.AreEqual(expected, (T)actual);
+      this.RunCloneObjectTest(this.SampleToken);
     }
 
     [Test]
     public void CloneTest()
     {
-      // arrange
-      IniToken actual;
-      T expected;
-
-      expected = this.SampleToken;
-
-      // act
-      actual = expected.Clone();
-
-      // assert
-      Assert.IsNotNull(actual);
-      Assert.AreNotSame(expected, actual);
-      Assert.IsInstanceOf<T>(actual);
-      IniDocumentAssert.AreEqual(expected, actual);
+      this.RunCloneTest(this.SampleToken);
     }
 
     [Test]

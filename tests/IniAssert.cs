@@ -2,7 +2,7 @@
 
 namespace Cyotek.Data.Ini.Tests
 {
-  internal static class IniDocumentAssert
+  internal static class IniAssert
   {
     #region Public Methods
 
@@ -10,17 +10,30 @@ namespace Cyotek.Data.Ini.Tests
     {
       if (expected != null && actual != null)
       {
+        Assert.AreEqual(expected.Count, actual.Count);
+
         for (int i = 0; i < expected.Count; i++)
         {
-          IniDocumentAssert.AreEqual(expected[i], actual[i]);
+          IniAssert.AreEqual(expected[i], actual[i]);
         }
+      }
+      else
+      {
+        Assert.IsTrue(object.ReferenceEquals(expected, actual));
       }
     }
 
     public static void AreEqual(IniDocument expected, IniDocument actual)
     {
-      Assert.AreEqual(expected.ChildTokens.Count, actual.ChildTokens.Count);
-      IniDocumentAssert.AreEqual(expected.ChildTokens, actual.ChildTokens);
+      if (expected != null && actual != null)
+      {
+        // note: Note comparing filename, deliberately
+        IniAssert.AreEqual(expected.ChildTokens, actual.ChildTokens);
+      }
+      else
+      {
+        Assert.IsTrue(object.ReferenceEquals(expected, actual));
+      }
     }
 
     public static void AreEqual(IniToken expected, IniToken actual)
@@ -30,7 +43,7 @@ namespace Cyotek.Data.Ini.Tests
         Assert.AreEqual(expected.Type, actual.Type, nameof(IniToken.Type));
         Assert.AreEqual(expected.Name, actual.Name, nameof(IniToken.Name));
         Assert.AreEqual(expected.Value, actual.Value, nameof(IniToken.Value));
-        IniDocumentAssert.AreEqual(expected.ChildTokens, actual.ChildTokens);
+        IniAssert.AreEqual(expected.ChildTokens, actual.ChildTokens);
       }
       else
       {

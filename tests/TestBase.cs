@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 using System.IO;
 
 namespace Cyotek.Data.Ini.Tests
@@ -14,6 +15,38 @@ namespace Cyotek.Data.Ini.Tests
     #region Protected Methods
 
     protected string GetDataFileName(string baseName) => Path.Combine(this.DataDirectory, baseName);
+
+    protected void RunCloneObjectTest<T>(T expected)
+      where T : IniToken
+    {
+      // arrange
+      object actual;
+
+      // act
+      actual = ((ICloneable)expected).Clone();
+
+      // assert
+      Assert.IsNotNull(actual);
+      Assert.AreNotSame(expected, actual);
+      Assert.IsInstanceOf<T>(actual);
+      IniAssert.AreEqual(expected, (T)actual);
+    }
+
+    protected void RunCloneTest<T>(T expected)
+          where T : IniToken
+    {
+      // arrange
+      IniToken actual;
+
+      // act
+      actual = expected.Clone();
+
+      // assert
+      Assert.IsNotNull(actual);
+      Assert.AreNotSame(expected, actual);
+      Assert.IsInstanceOf<T>(actual);
+      IniAssert.AreEqual(expected, actual);
+    }
 
     #endregion Protected Methods
   }

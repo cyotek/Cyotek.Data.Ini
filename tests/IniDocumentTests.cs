@@ -1,54 +1,33 @@
-﻿
-using Cyotek.Testing;
+﻿using Cyotek.Testing;
 using NUnit.Framework;
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace Cyotek.Data.Ini.Tests
 {
   [TestFixture]
   internal class IniDocumentTests : TestBase
   {
-    #region Protected Fields
-
-    protected const string SampleIni = @"; this is a comment
-
-# this is also a comment
-
-[Settings]
-longTest=9223372036854775807
-shortTest=32767
-stringTest=HELLO WORLD THIS IS A TEST STRING ÅÄÖ!
-floatTest=0.4982315
-intTest=2147483647
-byteTest=127
-doubleTest=0.493128713218231
-colorTest=Crimson
-fontTest=Arial,13,""Italic, Strikeout""
-enumTest=Bold, Italic
-blank=
-  
-[ham]
-name=Hampus
-value=0.75
-
-[egg]
-name=Eggbert
-value=0.5
-
-
-this is a bad value";
-
-    #endregion Protected Fields
-
     #region Private Fields
 
     private const int _expectedMissingIndex = -1;
 
     #endregion Private Fields
 
-
     #region Public Methods
+
+    [Test]
+    public void CloneObjectTest()
+    {
+      this.RunCloneObjectTest(TestData.SampleDocument);
+    }
+
+    [Test]
+    public void CloneTest()
+    {
+      this.RunCloneTest(TestData.SampleDocument);
+    }
 
     [Test]
     public void ConstructorTest()
@@ -67,13 +46,36 @@ this is a bad value";
     public void ConstructorWithFileNameTest()
     {
       // arrange
-      IniDocument target;
+      IniDocument expected;
+      IniDocument actual;
+      string fileName;
+
+      expected = TestData.SampleDocument;
+
+      fileName = this.GetDataFileName("settings.ini");
 
       // act
-      target = new IniDocument(this.GetDataFileName("settings.ini"));
+      actual = new IniDocument(fileName);
 
       // assert
-      IniDocumentAssert.AreEqual(target, this.GetSampleDocument());
+      Assert.AreEqual(fileName, actual.FileName);
+      IniAssert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void CreateSectionExceptionTest()
+    {
+      // arrange
+      IniDocument target;
+      string expectedSectionName;
+
+      expectedSectionName = "beta";
+
+      target = new IniDocument();
+      target.ChildTokens.Add(new IniValueToken(expectedSectionName, ""));
+
+      // act & assert
+      Assert.Throws<InvalidDataException>(() => target.CreateSection(expectedSectionName));
     }
 
     [Test]
@@ -128,6 +130,23 @@ this is a bad value";
       Assert.AreEqual(expectedSectionName, actual.Name);
       Assert.AreEqual(IniTokenType.Section, actual.Type);
       Assert.AreNotEqual(_expectedMissingIndex, target.ChildTokens.IndexOf(expectedSectionName));
+    }
+
+    [Test]
+    public void CreateTokenExceptionTest()
+    {
+      // arrange
+      IniDocument target;
+      MethodInfo method;
+      Exception actual;
+
+      target = new IniDocument();
+
+      method = typeof(IniDocument).GetMethod("CreateToken", BindingFlags.Instance | BindingFlags.NonPublic);
+
+      // act & assert
+      actual = Assert.Throws<TargetInvocationException>(() => method.Invoke(target, new object[] { (IniTokenType)(-1), "" }));
+      Assert.IsInstanceOf<ArgumentOutOfRangeException>(actual.InnerException);
     }
 
     [Test]
@@ -280,6 +299,26 @@ this is a bad value";
     }
 
     [Test]
+    public void FileNameTest()
+    {
+      // arrange
+      IniDocument target;
+      string expected;
+      string actual;
+
+      target = new IniDocument();
+
+      expected = "alpha.ini";
+
+      // act
+      target.FileName = expected;
+
+      // assert
+      actual = target.FileName;
+      Assert.AreEqual(expected, actual);
+    }
+
+    [Test]
     public void GetSectionInvalidSectionExceptionTest()
     {
       // arrange
@@ -311,6 +350,68 @@ this is a bad value";
       Assert.Throws<ArgumentNullException>(() => target.GetSection(null));
     }
 
+    [TestCase("Settings", "shortTest", null, "32767", TestName = "{m}")]
+    [TestCase("OldSettings", "shortTest", null, null, TestName = "{m}MissingSection")]
+    [TestCase("Settings", "quickTest", null, null, TestName = "{m}MissingValue")]
+    [TestCase("Settings", "fallbackTest", "alpha", "alpha", TestName = "{m}Fallback")]
+    public void GetValueFallbackTestCases(string section, string name, string defaultValue, string expected)
+    {
+      // arrange
+      IniDocument target;
+      string actual;
+
+      target = TestData.SampleDocument;
+
+      // act
+      actual = target.GetValue(section, name, defaultValue);
+
+      // assert
+      Assert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void GetValueNullExceptionTest()
+    {
+      Assert.Throws<ArgumentNullException>(() => new IniDocument().GetValue("alpha", null));
+    }
+
+    [TestCase("Settings", "shortTest", null, "32767", TestName = "{m}")]
+    [TestCase("OldSettings", "shortTest", null, null, TestName = "{m}MissingSection")]
+    [TestCase("Settings", "quickTest", null, null, TestName = "{m}MissingValue")]
+    [TestCase("Settings", "fallbackTest", "alpha", "alpha", TestName = "{m}Fallback")]
+    public void GetValueStaticTestCases(string section, string name, string defaultValue, string expected)
+    {
+      // arrange
+      string fileName;
+      string actual;
+
+      fileName = this.GetDataFileName("settings.ini");
+
+      // act
+      actual = IniDocument.GetValue(fileName, section, name, defaultValue);
+
+      // assert
+      Assert.AreEqual(expected, actual);
+    }
+
+    [TestCase("Settings", "shortTest", "32767", TestName = "{m}")]
+    [TestCase("OldSettings", "shortTest", "", TestName = "{m}MissingSection")]
+    [TestCase("Settings", "quickTest", "", TestName = "{m}MissingValue")]
+    public void GetValueTestCases(string section, string name, string expected)
+    {
+      // arrange
+      IniDocument target;
+      string actual;
+
+      target = TestData.SampleDocument;
+
+      // act
+      actual = target.GetValue(section, name);
+
+      // assert
+      Assert.AreEqual(expected, actual);
+    }
+
     [Test]
     public void LoadIniTest()
     {
@@ -319,13 +420,13 @@ this is a bad value";
       IniDocument expected;
 
       target = new IniDocument();
-      expected = this.GetSampleDocument();
+      expected = TestData.SampleDocument;
 
       // act
-      target.LoadIni(SampleIni);
+      target.LoadIni(TestData.SampleIni);
 
       // assert
-      IniDocumentAssert.AreEqual(expected, target);
+      IniAssert.AreEqual(expected, target);
     }
 
     [Test]
@@ -338,7 +439,7 @@ this is a bad value";
 
       fileName = this.GetDataFileName("settings.ini");
       target = new IniDocument();
-      expected = this.GetSampleDocument();
+      expected = TestData.SampleDocument;
 
       // act
       using (Stream stream = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -347,7 +448,7 @@ this is a bad value";
       }
 
       // assert
-      IniDocumentAssert.AreEqual(expected, target);
+      IniAssert.AreEqual(expected, target);
     }
 
     [Test]
@@ -360,13 +461,13 @@ this is a bad value";
 
       fileName = this.GetDataFileName("settings.ini");
       target = new IniDocument();
-      expected = this.GetSampleDocument();
+      expected = TestData.SampleDocument;
 
       // act
       target.Load(fileName);
 
       // assert
-      IniDocumentAssert.AreEqual(expected, target);
+      IniAssert.AreEqual(expected, target);
     }
 
     [Test]
@@ -446,7 +547,7 @@ epsilon";
         IniDocument target;
         IniDocument actual;
 
-        target = this.GetSampleDocument();
+        target = TestData.SampleDocument;
         target.Save(workFile.FileName);
         target.SetValue("Settings", "stringTest", "SAD FACE");
 
@@ -459,8 +560,20 @@ epsilon";
         actual = new IniDocument();
         actual.Load(workFile.FileName);
         Assert.IsTrue((File.GetAttributes(workFile.FileName) & FileAttributes.Hidden) != 0);
-        IniDocumentAssert.AreEqual(target, actual);
+        IniAssert.AreEqual(target, actual);
       }
+    }
+
+    [Test]
+    public void SaveFileNameExceptionTest()
+    {
+      Assert.Throws<ArgumentNullException>(() => new IniDocument().Save((string)null));
+    }
+
+    [Test]
+    public void SaveStreamExceptionTest()
+    {
+      Assert.Throws<ArgumentNullException>(() => new IniDocument().Save((Stream)null));
     }
 
     [Test]
@@ -472,7 +585,7 @@ epsilon";
         IniDocument target;
         IniDocument actual;
 
-        target = this.GetSampleDocument();
+        target = TestData.SampleDocument;
 
         // act
         target.Save(workFile.FileName);
@@ -480,8 +593,35 @@ epsilon";
         // assert
         actual = new IniDocument();
         actual.Load(workFile.FileName);
-        IniDocumentAssert.AreEqual(target, actual);
+        IniAssert.AreEqual(target, actual);
       }
+    }
+
+    [Test]
+    public void SaveTextWriterExceptionTest()
+    {
+      Assert.Throws<ArgumentNullException>(() => new IniDocument().Save((TextWriter)null));
+    }
+
+    [Test]
+    public void SetChildTokensTest()
+    {
+      // arrange
+      IniDocument target;
+      PropertyInfo property;
+      IniTokenCollection expected;
+
+      target = new IniDocument();
+
+      property = typeof(IniDocument).GetProperty(nameof(IniDocument.ChildTokens));
+
+      expected = new IniTokenCollection();
+
+      // act
+      property.SetValue(target, expected, null);
+
+      // assert
+      Assert.AreSame(expected, target.ChildTokens);
     }
 
     [Test]
@@ -526,7 +666,7 @@ gif";
       actual = writer.ToString();
       Assert.AreEqual(expected, actual);
     }
-    
+
     [Test]
     public void SetValueStaticTest()
     {
@@ -634,8 +774,8 @@ Value1=Three";
       string expected;
       string actual;
 
-      target = this.GetSampleDocument();
-      expected = SampleIni;
+      target = TestData.SampleDocument;
+      expected = TestData.SampleIni;
 
       // act
       actual = target.ToString();
@@ -645,55 +785,5 @@ Value1=Three";
     }
 
     #endregion Public Methods
-
-    #region Protected Methods
-
-   
-
-    protected IniDocument GetSampleDocument()
-    {
-      IniDocument result;
-      IniSectionToken section;
-
-      result = new IniDocument();
-
-      result.ChildTokens.Add(new IniCommentToken("; this is a comment"));
-      result.ChildTokens.Add(new IniWhitespaceToken());
-      result.ChildTokens.Add(new IniCommentToken("# this is also a comment"));
-      result.ChildTokens.Add(new IniWhitespaceToken());
-
-      section = new IniSectionToken("Settings");
-      section.ChildTokens.Add(new IniValueToken("longTest", "9223372036854775807"));
-      section.ChildTokens.Add(new IniValueToken("shortTest", "32767"));
-      section.ChildTokens.Add(new IniValueToken("stringTest", "HELLO WORLD THIS IS A TEST STRING ÅÄÖ!"));
-      section.ChildTokens.Add(new IniValueToken("floatTest", "0.4982315"));
-      section.ChildTokens.Add(new IniValueToken("intTest", "2147483647"));
-      section.ChildTokens.Add(new IniValueToken("byteTest", "127"));
-      section.ChildTokens.Add(new IniValueToken("doubleTest", "0.493128713218231"));
-      section.ChildTokens.Add(new IniValueToken("colorTest", "Crimson"));
-      section.ChildTokens.Add(new IniValueToken("fontTest", "Arial,13,\"Italic, Strikeout\""));
-      section.ChildTokens.Add(new IniValueToken("enumTest", "Bold, Italic"));
-      section.ChildTokens.Add(new IniValueToken("blank", string.Empty));
-      section.ChildTokens.Add(new IniWhitespaceToken("  "));
-      result.ChildTokens.Add(section);
-
-      section = new IniSectionToken("ham");
-      section.ChildTokens.Add(new IniValueToken("name", "Hampus"));
-      section.ChildTokens.Add(new IniValueToken("value", "0.75"));
-      section.ChildTokens.Add(new IniWhitespaceToken());
-      result.ChildTokens.Add(section);
-
-      section = new IniSectionToken("egg");
-      section.ChildTokens.Add(new IniValueToken("name", "Eggbert"));
-      section.ChildTokens.Add(new IniValueToken("value", "0.5"));
-      section.ChildTokens.Add(new IniWhitespaceToken());
-      section.ChildTokens.Add(new IniWhitespaceToken());
-      section.ChildTokens.Add(new IniRawToken("this is a bad value"));
-      result.ChildTokens.Add(section);
-
-      return result;
-    }
-
-    #endregion Protected Methods
   }
 }

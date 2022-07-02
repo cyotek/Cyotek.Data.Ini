@@ -56,7 +56,7 @@ namespace Cyotek.Data.Ini.Tests
       target.AddRange(items);
 
       // assert
-      IniDocumentAssert.AreEqual(expected, target);
+      IniAssert.AreEqual(expected, target);
     }
 
     [Test]
@@ -72,7 +72,7 @@ namespace Cyotek.Data.Ini.Tests
       actual = new IniTokenCollection(expected);
 
       // assert
-      IniDocumentAssert.AreEqual(expected, actual);
+      IniAssert.AreEqual(expected, actual);
     }
 
     [Test]
@@ -199,7 +199,7 @@ namespace Cyotek.Data.Ini.Tests
       target.InsertRange(1, items);
 
       // assert
-      IniDocumentAssert.AreEqual(expected, target);
+      IniAssert.AreEqual(expected, target);
     }
 
     [TestCase("alpha", true, TestName = "{m}")]
@@ -253,7 +253,7 @@ namespace Cyotek.Data.Ini.Tests
       target.RemoveRange(items);
 
       // assert
-      IniDocumentAssert.AreEqual(expected, target);
+      IniAssert.AreEqual(expected, target);
     }
 
     [Test]
@@ -315,7 +315,7 @@ namespace Cyotek.Data.Ini.Tests
       target.Sort((x, y) => -string.Compare(x.Name, y.Name));
 
       // assert
-      IniDocumentAssert.AreEqual(expected, target);
+      IniAssert.AreEqual(expected, target);
     }
 
     [Test]
@@ -400,7 +400,7 @@ namespace Cyotek.Data.Ini.Tests
       target.Sort(2, 7, IniTokenComparer.Ordinal);
 
       // assert
-      IniDocumentAssert.AreEqual(expected, target);
+      IniAssert.AreEqual(expected, target);
     }
 
     [Test]
@@ -431,7 +431,7 @@ namespace Cyotek.Data.Ini.Tests
       target.Sort();
 
       // assert
-      IniDocumentAssert.AreEqual(expected, target);
+      IniAssert.AreEqual(expected, target);
     }
 
     [Test]
@@ -501,7 +501,7 @@ namespace Cyotek.Data.Ini.Tests
       target.TryAddRange(items);
 
       // assert
-      IniDocumentAssert.AreEqual(expected, target);
+      IniAssert.AreEqual(expected, target);
     }
 
     [TestCaseSource(nameof(TryGetValueTestCaseSource))]
@@ -522,7 +522,7 @@ namespace Cyotek.Data.Ini.Tests
 
       // assert
       Assert.AreEqual(expected, actual);
-      IniDocumentAssert.AreEqual(expectedToken, atualToken);
+      IniAssert.AreEqual(expectedToken, atualToken);
     }
 
 #endregion Public Methods

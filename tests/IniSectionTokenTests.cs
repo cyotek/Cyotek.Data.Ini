@@ -158,7 +158,7 @@ eta=zeta";
       actual = target.GetValueToken(name);
 
       // assert
-      IniDocumentAssert.AreEqual(expected, actual);
+      IniAssert.AreEqual(expected, actual);
     }
 
     [TestCase("alpha", "gamma", "beta", TestName = "{m}")]

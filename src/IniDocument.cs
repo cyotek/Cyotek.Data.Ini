@@ -99,6 +99,7 @@ namespace Cyotek.Data.Ini
       IniDocument result;
 
       result = new IniDocument();
+
       foreach (IniToken token in this.ChildTokens)
       {
         result.ChildTokens.Add(token.Clone());
@@ -140,6 +141,7 @@ namespace Cyotek.Data.Ini
       result = false;
 
       sectionIndex = this.ChildTokens.IndexOf(sectionName);
+
       if (sectionIndex != -1)
       {
         this.ChildTokens.RemoveAt(sectionIndex);
