@@ -7,7 +7,7 @@ namespace Cyotek.Data.Ini
 {
   public class IniSectionToken : IniToken
   {
-    #region Constructors
+    #region Public Constructors
 
     public IniSectionToken()
       : this(string.Empty)
@@ -20,9 +20,9 @@ namespace Cyotek.Data.Ini
       this.ChildTokens = new IniTokenCollection();
     }
 
-    #endregion
+    #endregion Public Constructors
 
-    #region Properties
+    #region Public Properties
 
     public override IniTokenType Type => IniTokenType.Section;
 
@@ -34,9 +34,9 @@ namespace Cyotek.Data.Ini
       set => throw new NotSupportedException();
     }
 
-    #endregion
+    #endregion Public Properties
 
-    #region Methods
+    #region Public Methods
 
     public override IniToken Clone()
     {
@@ -54,18 +54,18 @@ namespace Cyotek.Data.Ini
 
     public IEnumerable<string> GetNames()
     {
-      foreach(IniToken token in this.ChildTokens)
+      foreach (IniToken token in this.ChildTokens)
       {
-        if(token.Type == IniTokenType.Value)
+        if (token.Type == IniTokenType.Value)
         {
           yield return token.Name;
         }
       }
     }
 
-    public string GetValue(string valueName)
+    public string GetValue(string name)
     {
-      return this.GetValue(valueName, string.Empty);
+      return this.GetValue(name, string.Empty);
     }
 
     public string GetValue(string name, string defaultValue)
@@ -79,14 +79,31 @@ namespace Cyotek.Data.Ini
 
     public IniValueToken GetValueToken(string name)
     {
-      this.ChildTokens.TryGetValue(name, out IniToken valueToken);
+      IniValueToken result;
 
-      if (valueToken != null && valueToken.Type != IniTokenType.Value)
+      if (this.ChildTokens.TryGetValue(name, out IniToken valueToken))
       {
-        throw new InvalidDataException(string.Format("A token named '{0}' already exists, but is not a value token.", name));
+#if NETCOREAPP || NET
+        if (valueToken is IniValueToken typedResult)
+        {
+          result = typedResult;
+        }
+        else
+#else
+        result = valueToken as IniValueToken;
+
+        if (result == null)
+#endif
+        {
+          throw new InvalidDataException(string.Format("A token named '{0}' exists, but is not a value token.", name));
+        }
+      }
+      else
+      {
+        result = null;
       }
 
-      return (IniValueToken)valueToken;
+      return result;
     }
 
     public bool SetValue(string name, string value)
@@ -134,6 +151,22 @@ namespace Cyotek.Data.Ini
       return result;
     }
 
+    public override void Write(TextWriter writer)
+    {
+      writer.WriteLine("[" + this.Name + "]");
+
+      base.Write(writer);
+
+      if (this.AreAllChildrenValues())
+      {
+        writer.WriteLine();
+      }
+    }
+
+    #endregion Public Methods
+
+    #region Private Methods
+
     private static int GetInsertionIndex(IniTokenCollection children)
     {
       int index;
@@ -155,27 +188,15 @@ namespace Cyotek.Data.Ini
       return index;
     }
 
-    public override void Write(TextWriter writer)
-    {
-      writer.WriteLine(string.Concat("[", this.Name, "]"));
-
-      base.Write(writer);
-
-      if (this.AreAllChildrenValues())
-      {
-        writer.WriteLine();
-      }
-    }
-
     private bool AreAllChildrenValues()
     {
       bool result;
 
       result = true;
 
-      foreach(IniToken token in this.ChildTokens)
+      foreach (IniToken token in this.ChildTokens)
       {
-        if(token.Type!= IniTokenType.Value)
+        if (token.Type != IniTokenType.Value)
         {
           result = false;
           break;
@@ -185,6 +206,6 @@ namespace Cyotek.Data.Ini
       return result;
     }
 
-    #endregion
+    #endregion Private Methods
   }
 }

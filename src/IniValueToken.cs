@@ -34,7 +34,7 @@ namespace Cyotek.Data.Ini
 
     public override void Write(TextWriter writer)
     {
-      writer.WriteLine(string.Concat(this.Name, "=", this.Value.ToEscapedLiteral()));
+      writer.WriteLine(this.Name + "=" + this.Value.ToEscapedLiteral());
 
       base.Write(writer);
     }
