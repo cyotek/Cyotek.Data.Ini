@@ -331,13 +331,13 @@ namespace Cyotek.Data.Ini.Tests
       string expected;
       Exception actual;
 
-      expected = "Index cannot be less than zero. (Parameter 'index')";
+      expected = "Index cannot be less than zero.";
 
       // act
       actual = Assert.Throws<ArgumentException>(() => new IniTokenCollection().Sort(-1, 1, IniTokenComparer.Ordinal));
 
       // assert
-      Assert.AreEqual(expected, actual.Message);
+      StringAssert.Contains(expected, actual.Message);
     }
 
     [Test]
@@ -363,13 +363,13 @@ namespace Cyotek.Data.Ini.Tests
       string expected;
       Exception actual;
 
-      expected = "Count cannot be less than zero. (Parameter 'count')";
+      expected = "Count cannot be less than zero.";
 
       // act
       actual = Assert.Throws<ArgumentException>(() => new IniTokenCollection().Sort(0, -1, IniTokenComparer.Ordinal));
 
       // assert
-      Assert.AreEqual(expected, actual.Message);
+      StringAssert.Contains(expected, actual.Message);
     }
 
     [Test]
@@ -525,6 +525,6 @@ namespace Cyotek.Data.Ini.Tests
       IniDocumentAssert.AreEqual(expectedToken, atualToken);
     }
 
-    #endregion Public Methods
+#endregion Public Methods
   }
 }
