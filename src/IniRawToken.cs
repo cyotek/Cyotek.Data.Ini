@@ -9,13 +9,13 @@ namespace Cyotek.Data.Ini
     #region Constructors
 
     public IniRawToken()
-      : this(string.Empty)
+      : this(null)
     {
     }
 
     public IniRawToken(string value)
+      : base(value)
     {
-      this.Value = value;
     }
 
     #endregion

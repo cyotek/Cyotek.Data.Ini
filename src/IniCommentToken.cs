@@ -14,8 +14,8 @@ namespace Cyotek.Data.Ini
     }
 
     public IniCommentToken(string value)
+      : base(value)
     {
-      this.Value = value;
     }
 
     #endregion

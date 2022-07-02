@@ -18,6 +18,16 @@ namespace Cyotek.Data.Ini
 
     public virtual string Value { get; set; }
 
+    protected IniToken()
+    {
+
+    }
+
+    protected IniToken(string value)
+    {
+      this.Value = value;
+    }
+
     #endregion
 
     #region Methods
