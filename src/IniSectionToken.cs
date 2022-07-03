@@ -47,6 +47,16 @@ namespace Cyotek.Data.Ini
 
     #endregion Public Properties
 
+    #region Public Indexers
+
+    public string this[string name]
+    {
+      get => this.GetValue(name);
+      set => this.SetValue(name, value);
+    }
+
+    #endregion Public Indexers
+
     #region Public Methods
 
     public override IniToken Clone()
@@ -85,7 +95,9 @@ namespace Cyotek.Data.Ini
 
       valueToken = this.GetValueToken(name);
 
-      return valueToken == null ? defaultValue : valueToken.Value;
+      return valueToken == null
+        ? defaultValue
+        : valueToken.Value;
     }
 
     public IniValueToken GetValueToken(string name)

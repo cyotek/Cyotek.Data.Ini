@@ -189,6 +189,35 @@ eta=zeta";
       Assert.AreEqual(expected, actual);
     }
 
+    [TestCase("alpha", "beta", TestName = "{m}")]
+    [TestCase("epsilon", "", TestName = "{m}Missing")]
+    public void IndexerGetTestCases(string key, string expected)
+    {
+      // arrange
+      IniSectionToken target;
+      string actual;
+
+      target = this.SampleToken;
+
+      // act
+      actual = target[key];
+
+      // assert
+      Assert.AreEqual(expected, actual);
+    }
+
+    [TestCaseSource(nameof(SetValueTestCaseSource))]
+    public void IndexerSetTestCases(IniSectionToken target, string name, string value, bool _, string expectedLayout)
+    {
+      // arrange
+
+      // act
+      target[name] = value;
+
+      // assert
+      Assert.AreEqual(expectedLayout, target.InnerText);
+    }
+
     [Test]
     public override void NameSetTest()
     {
