@@ -8,3 +8,4 @@ dist/
 *.suo
 *.user
 *.pdn
+/push.cmd
