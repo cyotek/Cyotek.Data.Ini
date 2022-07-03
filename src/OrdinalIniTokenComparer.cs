@@ -21,11 +21,11 @@ namespace Cyotek.Data.Ini
     {
       int result;
 
-      result = string.Compare(x.Name, y.Name, StringComparison.Ordinal);
+      result = string.CompareOrdinal(x.Name, y.Name);
 
       if (result == 0)
       {
-        result = string.Compare(x.Value, y.Value, StringComparison.Ordinal);
+        result = string.CompareOrdinal(x.Value, y.Value);
 
         if (result == 0)
         {
