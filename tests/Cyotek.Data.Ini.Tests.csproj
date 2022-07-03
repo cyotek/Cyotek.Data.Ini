@@ -7,6 +7,10 @@
     <!--<Nullable Condition="'$(TargetFramework)' == 'net6.0'">enable</Nullable>-->
   </PropertyGroup>
 
+  <PropertyGroup>
+    <RootNamespace>$(ComponentName).Tests</RootNamespace>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="coverlet.msbuild" Version="3.1.2">
       <PrivateAssets>all</PrivateAssets>
@@ -27,16 +31,6 @@
     <None Update="data\settings.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <!--Strong Name -->
-  <PropertyGroup>
-    <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\res\Cyotek.Data.Ini.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="..\res\Cyotek.Data.Ini.snk" Link="Cyotek.Data.Ini.snk" />
   </ItemGroup>
 
 </Project>
