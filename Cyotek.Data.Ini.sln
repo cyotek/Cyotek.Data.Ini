@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "scratch", "scratch\scratch.csproj", "{1CCE39DE-46FB-497B-A5B7-FF07AAD6D186}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cyotek.Data.Ini", "src\Cyotek.Data.Ini.csproj", "{5AD901AF-E5EF-4C40-AF3F-85E187CE5746}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cyotek.Data.Ini.Tests", "tests\Cyotek.Data.Ini.Tests.csproj", "{ACD4872F-CB20-4BEF-AD56-EDB5CB78801A}"
@@ -27,6 +29,10 @@ Global
 		{ACD4872F-CB20-4BEF-AD56-EDB5CB78801A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACD4872F-CB20-4BEF-AD56-EDB5CB78801A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACD4872F-CB20-4BEF-AD56-EDB5CB78801A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CCE39DE-46FB-497B-A5B7-FF07AAD6D186}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CCE39DE-46FB-497B-A5B7-FF07AAD6D186}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CCE39DE-46FB-497B-A5B7-FF07AAD6D186}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CCE39DE-46FB-497B-A5B7-FF07AAD6D186}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
