@@ -42,16 +42,16 @@ IF %ERRORLEVEL% NEQ 0 EXIT /b %ERRORLEVEL%
 
 PUSHD %RELDIR%
 
-CALL cyotek-sign-file.cmd net35\%DLLNAME%
-CALL cyotek-sign-file.cmd net40\%DLLNAME%
-CALL cyotek-sign-file.cmd net45\%DLLNAME%
-CALL cyotek-sign-file.cmd net452\%DLLNAME%
-CALL cyotek-sign-file.cmd net462\%DLLNAME%
-CALL cyotek-sign-file.cmd net472\%DLLNAME%
-CALL cyotek-sign-file.cmd net48\%DLLNAME%
-CALL cyotek-sign-file.cmd net6.0\%DLLNAME%
-CALL cyotek-sign-file.cmd netcoreapp3.1\%DLLNAME%
-CALL cyotek-sign-file.cmd netstandard2.1\%DLLNAME%
+CALL cyotek-dual-sign-file.cmd net35\%DLLNAME%
+CALL cyotek-dual-sign-file.cmd net40\%DLLNAME%
+CALL cyotek-sign-file.cmd      net45\%DLLNAME%
+CALL cyotek-sign-file.cmd      net452\%DLLNAME%
+CALL cyotek-sign-file.cmd      net462\%DLLNAME%
+CALL cyotek-sign-file.cmd      net472\%DLLNAME%
+CALL cyotek-sign-file.cmd      net48\%DLLNAME%
+CALL cyotek-sign-file.cmd      net6.0\%DLLNAME%
+CALL cyotek-sign-file.cmd      netcoreapp3.1\%DLLNAME%
+CALL cyotek-sign-file.cmd      netstandard2.1\%DLLNAME%
 
 7z.exe a %BASENAME%.2.x.x.zip -r
 
