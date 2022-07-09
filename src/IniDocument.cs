@@ -457,17 +457,17 @@ namespace Cyotek.Data.Ini
 
         trimmedLine = line.TrimWhitespace();
 
-        if (trimmedLine[0] == '[' && trimmedLine[trimmedLine.Length - 1] == ']')
+        if (trimmedLine.StartsWithAny(this.GetCommentCharacters()))
+        {
+          result = IniTokenType.Comment;
+        }
+        else if (trimmedLine[0] == '[' && trimmedLine[trimmedLine.Length - 1] == ']')
         {
           result = IniTokenType.Section;
         }
         else if (trimmedLine.IndexOf('=') != -1)
         {
           result = IniTokenType.Value;
-        }
-        else if (trimmedLine.StartsWithAny(this.GetCommentCharacters()))
-        {
-          result = IniTokenType.Comment;
         }
         else
         {

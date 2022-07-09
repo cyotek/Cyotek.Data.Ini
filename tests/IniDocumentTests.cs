@@ -41,6 +41,27 @@ namespace Cyotek.Data.Ini.Tests
     }
 
     [Test]
+    public void CommentedValueLoadTest()
+    {
+      // arrange
+      IniDocument target;
+      string ini;
+      IniToken expected;
+
+      target = new IniDocument();
+
+      ini = "; PropertyTagDateTime = PropertyTagTypeASCII,{now}";
+
+      expected = new IniCommentToken("; PropertyTagDateTime = PropertyTagTypeASCII,{now}");
+
+      // act
+      target.LoadIni(ini);
+
+      // assert
+      IniAssert.AreEqual(expected, target.ChildTokens[0]);
+    }
+
+    [Test]
     public void ConstructorTest()
     {
       // arrange
