@@ -21,7 +21,9 @@ main code library. As this isn't open source (yet), and I didn't
 like the 3rd party ini helper library I was using with another
 of my open source projects, I decided to extract this one and
 make it available. I filled in some test coverage and fixed a
-bug or two.
+bug or two. With that said, despite its age it is still somewhat
+underused, and so likely still has bugs lurking around and the
+feature set and object model could definitely be improved.
 
 ## Getting the library
 
@@ -47,7 +49,16 @@ IniDocument document;
 
 fileName = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), "settings.ini");
 
+// you can set the filename as part of the constructor
+// the document is not loaded until you try to access a token
 document = new IniDocument(fileName);
+
+// or, you can load text directly with the LoadIni method
+document.LoadIni("[Settings]\r\nalpha=beta");
+
+// or, you can load text from a file (this is direct, unlike the constructor)
+// overloads exist for loading from a Stream or TextWriter
+document.Load(fileName);
 
 // use GetValue to read a value from a section
 Console.WriteLine(document.GetValue("Settings", "stringTest"));
@@ -58,10 +69,12 @@ Console.WriteLine(document.GetValue("Settings", "newSettings", "fallback"));
 // or if you're reading multiple values, it is more efficient to get the section first
 IniSectionToken section;
 
-section = (IniSectionToken)document.GetSection("Settings"); // this will also create it if it doesn't exist
+section = (IniSectionToken)document.CreateSection("Settings"); // this will return the existing section if found, or create a new one if not
 Console.WriteLine(section.GetValue("longTest"));
 Console.WriteLine(section.GetValue("shortTest"));
 Console.WriteLine(section.GetValue("stringTest"));
+
+section = (IniSectionToken)document.GetSection("Settings"); // this version returns null if the section doesn't exist
 
 // to get a list of defined names, you can call GetNames
 foreach (string name in section.GetNames())
